@@ -1,4 +1,5 @@
 const express = require("express");
+<<<<<<< HEAD
 const Web3 = require("web3");
 const cors = require("cors");
 
@@ -117,4 +118,24 @@ app.post("/transferOwnership", async (req, res) => {
 const PORT = 3000;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:3000`);
+=======
+const app = express();
+
+app.use(express.json());
+
+// Import routes
+const medicineRoutes = require("./routes/medicineRoutes");
+
+// Use routes
+app.use("/api", medicineRoutes);
+
+// Test root
+app.get("/", (req, res) => {
+  res.send("Backend is running 🚀");
+});
+
+const PORT = 8000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+>>>>>>> 0c2ca10f470da7e1fdedd5a1ff2feabcbd564c30
 });
