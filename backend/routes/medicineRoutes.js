@@ -1,20 +1,21 @@
 const express = require("express");
 const router = express.Router();
 
+// Import controllers
 const {
   addMedicine,
-  getMedicine
+  getMedicine,
+  transferOwnership
 } = require("../controllers/medicineController");
 
-// TEST ROUTE
+// Test route
 router.get("/test", (req, res) => {
   res.send("Test route working");
 });
 
-// POST API
+// APIs
 router.post("/addMedicine", addMedicine);
-
-// GET API
-router.get("/getMedicine/:id", getMedicine);
+router.get("/getMedicine/:batchId", getMedicine);
+router.post("/transferOwnership", transferOwnership);
 
 module.exports = router;
