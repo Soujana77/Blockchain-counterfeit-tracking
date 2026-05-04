@@ -1,6 +1,7 @@
 // Import components
 import FeatureCards from "../components/FeatureCards";
 import StatsSection from "../components/StatsSection";
+import { Link } from "react-router-dom";
 
 function Home() {
   return (
@@ -30,13 +31,36 @@ function Home() {
         </p>
 
         <div className="mt-8 flex flex-wrap justify-center gap-4">
-          <button className="px-6 py-3 bg-cyan-500 hover:bg-cyan-400 text-slate-900 rounded-xl font-semibold transition">
-            Verify Medicine
-          </button>
 
-          <button className="px-6 py-3 border border-cyan-400 text-cyan-400 hover:bg-cyan-400 hover:text-slate-900 rounded-xl font-semibold transition">
+          {/* ✅ VERIFY BUTTON (NOW WORKS) */}
+          <Link
+            to="/verify"
+            className="
+              px-6 py-3
+              bg-cyan-500 hover:bg-cyan-400
+              text-slate-900
+              rounded-xl font-semibold
+              transition hover:scale-105
+            "
+          >
+            Verify Medicine
+          </Link>
+
+          {/* OPTIONAL: Add Medicine route later */}
+          <Link
+            to="/add-medicine"
+            className="
+              px-6 py-3
+              border border-cyan-400
+              text-cyan-400
+              hover:bg-cyan-400 hover:text-slate-900
+              rounded-xl font-semibold
+              transition hover:scale-105
+            "
+          >
             Add Medicine
-          </button>
+          </Link>
+
         </div>
       </section>
 

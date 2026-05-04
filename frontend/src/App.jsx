@@ -1,19 +1,13 @@
-// Import Navbar
 import Navbar from "./components/Navbar";
-
-// Import Routes
 import AppRoutes from "./routes/AppRoutes";
+import ScrollToHash from "./utils/ScrollToHash";
 
 function App() {
   return (
     <div>
-
-      {/* Navbar stays on all pages */}
       <Navbar />
-
-      {/* Dynamic Page Content */}
+      <ScrollToHash />   {/* 👈 ADD THIS */}
       <AppRoutes />
-
     </div>
   );
 }

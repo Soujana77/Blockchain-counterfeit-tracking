@@ -1,90 +1,53 @@
-// Navbar Component
 import { Link } from "react-router-dom";
 
 function Navbar() {
   return (
-    <nav
-      className="
-        fixed top-0 left-0 w-full z-50
-        bg-slate-950/90
-        backdrop-blur-lg
-        border-b border-white/10
-      "
-    >
-      <div
-        className="
-          w-full
-          px-10
-          py-4
-          flex items-center justify-between
-        "
-      >
+    <nav className="fixed top-0 left-0 w-full z-50 backdrop-blur-xl bg-slate-950/70 border-b border-white/10">
+      
+      <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
+
         {/* Logo */}
         <h1 className="text-3xl font-extrabold text-cyan-400 tracking-wide">
           MediChain
         </h1>
 
-        {/* Navigation Links */}
-        <ul className="flex items-center gap-8 text-sm md:text-base font-medium">
+        <ul className="flex gap-8 items-center text-sm md:text-base font-medium">
 
           {/* Home */}
           <li>
             <Link
-              to="/"
-              className="
-                text-white
-                transition duration-300
-                hover:text-cyan-400
-                hover:scale-105
-              "
+              to="/#home"
+              className="text-white hover:text-cyan-400 transition duration-300"
             >
               Home
             </Link>
           </li>
 
-          {/* Features (scroll to section) */}
+          {/* Features */}
           <li>
-            <a
-              href="#features"
-              className="
-                text-white
-                transition duration-300
-                hover:text-cyan-400
-                hover:scale-105
-              "
+            <Link
+              to="/#features"
+              className="text-white hover:text-cyan-400 transition duration-300"
             >
               Features
-            </a>
+            </Link>
           </li>
 
-          {/* Stats (scroll to section) */}
+          {/* Stats */}
           <li>
-            <a
-              href="#stats"
-              className="
-                text-white
-                transition duration-300
-                hover:text-cyan-400
-                hover:scale-105
-              "
+            <Link
+              to="/#stats"
+              className="text-white hover:text-cyan-400 transition duration-300"
             >
               Stats
-            </a>
+            </Link>
           </li>
 
-          {/* Verify Button */}
+          {/* Verify */}
           <li>
             <Link
               to="/verify"
-              className="
-                px-5 py-2 rounded-xl
-                bg-cyan-500
-                hover:bg-cyan-400
-                text-slate-900
-                font-semibold
-                transition-all duration-300
-                hover:scale-105
-              "
+              className="px-5 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-900 font-semibold transition"
             >
               Verify
             </Link>
