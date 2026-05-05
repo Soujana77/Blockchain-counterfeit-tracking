@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Remove default browser spacing */
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Global background */
+body {
+  background: linear-gradient(to bottom right, #020617, #020617, #0a1a3a);
+}
