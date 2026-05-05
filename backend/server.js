@@ -1,6 +1,10 @@
 const express = require("express");
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 const Web3 = require("web3");
+=======
+const { Web3 } = require("web3");
+>>>>>>> Stashed changes
 const cors = require("cors");
 
 const app = express();
@@ -10,8 +14,16 @@ app.use(cors());
 // 🔗 Connect to Ganache
 const web3 = new Web3("http://127.0.0.1:7545");
 
+<<<<<<< Updated upstream
 // ⚠️ IMPORTANT: Replace with YOUR contract details
 const contractAddress = "0x06a92657bfBf325EdbCa2A712334F66a0f2B0aEc"; // no "..."
+=======
+// ==============================
+// 📌 Contract Details
+// ==============================
+const contractAddress = "0xc8a53067Ba7d3b34620b9DF44D88046A843AAD8c";
+
+>>>>>>> Stashed changes
 const abi = [
   {
     "inputs": [
