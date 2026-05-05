@@ -1,29 +1,21 @@
 const express = require("express");
-<<<<<<< Updated upstream
-<<<<<<< HEAD
-const Web3 = require("web3");
-=======
 const { Web3 } = require("web3");
->>>>>>> Stashed changes
 const cors = require("cors");
 
 const app = express();
 app.use(express.json());
 app.use(cors());
 
+// ==============================
 // 🔗 Connect to Ganache
+// ==============================
 const web3 = new Web3("http://127.0.0.1:7545");
 
-<<<<<<< Updated upstream
-// ⚠️ IMPORTANT: Replace with YOUR contract details
-const contractAddress = "0x06a92657bfBf325EdbCa2A712334F66a0f2B0aEc"; // no "..."
-=======
 // ==============================
 // 📌 Contract Details
 // ==============================
 const contractAddress = "0xc8a53067Ba7d3b34620b9DF44D88046A843AAD8c";
 
->>>>>>> Stashed changes
 const abi = [
   {
     "inputs": [
@@ -60,42 +52,54 @@ const abi = [
   }
 ];
 
-// 🧠 Create contract instance
+// ==============================
+// 🧠 Contract Instance
+// ==============================
 const contract = new web3.eth.Contract(abi, contractAddress);
 
-// 📌 Get default account
+// ==============================
+// 👤 Get Default Account
+// ==============================
 let account;
-web3.eth.getAccounts().then(acc => {
-  account = acc[0];
+
+async function init() {
+  const accounts = await web3.eth.getAccounts();
+  account = accounts[0];
   console.log("Using account:", account);
-});
+}
+
+init();
 
 // ==============================
 // 🚀 ROUTES
 // ==============================
 
-// ➕ Add Medicine
-app.post("/addMedicine", async (req, res) => {
+// Root route
+app.get("/", (req, res) => {
+  res.send("Backend is running 🚀");
+});
+
+// Add Medicine
+app.post("/api/addMedicine", async (req, res) => {
   try {
     const { id, name } = req.body;
 
-    await contract.methods
-      .addMedicine(id, name)
-      .send({ from: account, gas: 3000000 });
+    await contract.methods.addMedicine(id, name).send({
+      from: account,
+      gas: 3000000
+    });
 
-    res.send("Medicine added successfully ✅");
+    res.json({ message: "Medicine added successfully ✅" });
   } catch (error) {
-    res.status(500).send(error.message);
+    res.status(500).json({ error: error.message });
   }
 });
 
-// 🔍 Get Medicine
-app.get("/getMedicine/:id", async (req, res) => {
+// Get Medicine
+app.get("/api/getMedicine/:id", async (req, res) => {
   try {
-    const id = req.params.id;
-
     const result = await contract.methods
-      .verifyMedicine(id)
+      .verifyMedicine(req.params.id)
       .call();
 
     res.json({
@@ -104,50 +108,31 @@ app.get("/getMedicine/:id", async (req, res) => {
       owner: result[2]
     });
   } catch (error) {
-    res.status(500).send(error.message);
+    res.status(500).json({ error: error.message });
   }
 });
 
-// 🔁 Transfer Ownership
-app.post("/transferOwnership", async (req, res) => {
+// Transfer Ownership
+app.post("/api/transferOwnership", async (req, res) => {
   try {
     const { id, newOwner } = req.body;
 
-    await contract.methods
-      .transferOwnership(id, newOwner)
-      .send({ from: account, gas: 3000000 });
+    await contract.methods.transferOwnership(id, newOwner).send({
+      from: account,
+      gas: 3000000
+    });
 
-    res.send("Ownership transferred successfully 🔄");
+    res.json({ message: "Ownership transferred successfully 🔄" });
   } catch (error) {
-    res.status(500).send(error.message);
+    res.status(500).json({ error: error.message });
   }
 });
 
 // ==============================
 // 🟢 START SERVER
 // ==============================
-
-const PORT = 3000;
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:3000`);
-=======
-const app = express();
-
-app.use(express.json());
-
-// Import routes
-const medicineRoutes = require("./routes/medicineRoutes");
-
-// Use routes
-app.use("/api", medicineRoutes);
-
-// Test root
-app.get("/", (req, res) => {
-  res.send("Backend is running 🚀");
-});
-
 const PORT = 8000;
+
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
->>>>>>> 0c2ca10f470da7e1fdedd5a1ff2feabcbd564c30
+  console.log(`Server running on http://localhost:${PORT}`);
 });
