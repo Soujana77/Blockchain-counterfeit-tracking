@@ -14,13 +14,21 @@ const web3 = new Web3("http://127.0.0.1:7545");
 // ==============================
 // 📌 Contract Details
 // ==============================
-const contractAddress = "0xc8a53067Ba7d3b34620b9DF44D88046A843AAD8c";
+const contractAddress = "0x0B8476FDA7b8E64aC4d6C780e4D8ddE7ab727EAC";
 
 const abi = [
   {
     "inputs": [
-      { "internalType": "string", "name": "_id", "type": "string" },
-      { "internalType": "string", "name": "_name", "type": "string" }
+      {
+        "internalType": "string",
+        "name": "_id",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "_name",
+        "type": "string"
+      }
     ],
     "name": "addMedicine",
     "outputs": [],
@@ -29,25 +37,83 @@ const abi = [
   },
   {
     "inputs": [
-      { "internalType": "string", "name": "_id", "type": "string" }
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
     ],
-    "name": "verifyMedicine",
+    "name": "medicines",
     "outputs": [
-      { "internalType": "string", "name": "", "type": "string" },
-      { "internalType": "string", "name": "", "type": "string" },
-      { "internalType": "address", "name": "", "type": "address" }
+      {
+        "internalType": "string",
+        "name": "id",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "internalType": "address",
+        "name": "currentOwner",
+        "type": "address"
+      },
+      {
+        "internalType": "bool",
+        "name": "exists",
+        "type": "bool"
+      }
     ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "string", "name": "_id", "type": "string" },
-      { "internalType": "address", "name": "_newOwner", "type": "address" }
+      {
+        "internalType": "string",
+        "name": "_id",
+        "type": "string"
+      },
+      {
+        "internalType": "address",
+        "name": "_newOwner",
+        "type": "address"
+      }
     ],
     "name": "transferOwnership",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "_id",
+        "type": "string"
+      }
+    ],
+    "name": "verifyMedicine",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      },
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   }
 ];
@@ -103,10 +169,13 @@ app.get("/api/getMedicine/:id", async (req, res) => {
       .call();
 
     res.json({
-      id: result[0],
-      name: result[1],
-      owner: result[2]
-    });
+  message: "Medicine fetched successfully",
+  data: {
+    batchId: result[0],
+    name: result[1],
+    currentOwner: result[2]
+  }
+});
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

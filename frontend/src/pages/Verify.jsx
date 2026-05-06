@@ -2,12 +2,51 @@ import { useState } from "react";
 import QrScanner from "../components/QrScanner";
 
 function Verify() {
+  const [medicineId, setMedicineId] = useState("");
+  const [result, setResult] = useState(null);
+  const [status, setStatus] = useState("");
+
   const [scanResult, setScanResult] = useState("");
   const [showScanner, setShowScanner] = useState(false);
 
+  // 🔍 VERIFY FUNCTION
+  const handleVerify = async (id) => {
+    try {
+      const res = await fetch(
+        `http://127.0.0.1:8000/api/getMedicine/${id}`
+      );
+
+      if (!res.ok) {
+        throw new Error("Not found");
+      }
+
+      const data = await res.json();
+
+      setResult(data.data);
+      setStatus("authentic");
+    } catch (error) {
+      setResult(null);
+      setStatus("fake");
+    }
+  };
+
+  // 🔍 Button click verify
+  const handleVerifyClick = () => {
+    if (!medicineId) return;
+    handleVerify(medicineId);
+  };
+
+  // 🔍 Auto verify after QR scan
+  const handleScan = (data) => {
+    if (data) {
+      setScanResult(data);
+      setMedicineId(data);
+      handleVerify(data);
+    }
+  };
+
   return (
     <div className="min-h-screen text-white px-6 pt-28">
-
       {/* TITLE */}
       <h1 className="text-4xl font-bold text-center mb-10">
         Verify Medicine
@@ -16,32 +55,44 @@ function Verify() {
       {/* MAIN CARD */}
       <div className="max-w-2xl mx-auto bg-slate-900/60 p-8 rounded-2xl border border-white/10">
 
-        {/* Public Key */}
-        <div className="mb-6">
-          <label className="block mb-2 text-sm">Public Key</label>
-          <input
-            type="text"
-            placeholder="Enter public key"
-            className="w-full p-3 rounded-lg bg-slate-800 border border-slate-700 focus:outline-none"
-          />
-        </div>
+        {/* INPUT */}
+        <input
+          type="text"
+          placeholder="Enter Medicine ID"
+          value={medicineId}
+          onChange={(e) => setMedicineId(e.target.value)}
+          className="w-full mb-4 px-4 py-3 rounded-xl bg-slate-800 border border-white/10 outline-none"
+        />
 
-        {/* Private Key */}
-        <div className="mb-6">
-          <label className="block mb-2 text-sm">Private Key</label>
-          <input
-            type="text"
-            placeholder="Enter private key"
-            className="w-full p-3 rounded-lg bg-slate-800 border border-slate-700 focus:outline-none"
-          />
-        </div>
-
-        {/* Verify Button */}
-        <button className="w-full py-3 bg-cyan-500 hover:bg-cyan-400 text-slate-900 rounded-xl font-semibold">
+        {/* BUTTON */}
+        <button
+          onClick={handleVerifyClick}
+          className="w-full py-3 bg-cyan-500 hover:bg-cyan-400 text-slate-900 rounded-xl font-semibold"
+        >
           Verify Medicine
         </button>
 
-        {/* ================= QR SECTION (NOW INSIDE CARD) ================= */}
+        {/* RESULT */}
+        {status === "authentic" && result && (
+          <div className="mt-6 p-4 bg-green-900/40 border border-green-500 rounded-xl">
+            <h3 className="text-green-400 font-semibold text-lg mb-2">
+              ✅ Authentic Medicine
+            </h3>
+            <p>ID: {result.batchId}</p>
+            <p>Name: {result.name}</p>
+            <p>Owner: {result.currentOwner}</p>
+          </div>
+        )}
+
+        {status === "fake" && (
+          <div className="mt-6 p-4 bg-red-900/40 border border-red-500 rounded-xl">
+            <h3 className="text-red-400 font-semibold text-lg">
+              ❌ Fake / Not Found
+            </h3>
+          </div>
+        )}
+
+        {/* ================= QR SECTION ================= */}
 
         <div className="mt-10 text-center">
           <h2 className="text-xl font-semibold mb-4">
@@ -59,11 +110,11 @@ function Verify() {
           {/* Scanner */}
           {showScanner && (
             <div className="rounded-xl overflow-hidden border border-white/10">
-              <QrScanner onScan={setScanResult} />
+              <QrScanner onScan={handleScan} />
             </div>
           )}
 
-          {/* Result */}
+          {/* Scan Result */}
           {scanResult && (
             <div className="mt-6 p-4 bg-slate-800 rounded-xl border border-white/10">
               <p className="text-cyan-400 font-semibold">
@@ -75,7 +126,6 @@ function Verify() {
             </div>
           )}
         </div>
-
       </div>
     </div>
   );
