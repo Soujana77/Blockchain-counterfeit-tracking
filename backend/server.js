@@ -14,9 +14,10 @@ const web3 = new Web3("http://127.0.0.1:7545");
 // ==============================
 // 📌 Contract Details
 // ==============================
-const contractAddress = "0x0B8476FDA7b8E64aC4d6C780e4D8ddE7ab727EAC";
+const contractAddress = "0xfB6b898E1f6bE2fE5DD2c21091835803f2bb0f0b";
 
-const abi = [
+const abi = 
+    [
   {
     "inputs": [
       {
@@ -28,45 +29,16 @@ const abi = [
         "internalType": "string",
         "name": "_name",
         "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "_manufacturer",
+        "type": "string"
       }
     ],
     "name": "addMedicine",
     "outputs": [],
     "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "string",
-        "name": "",
-        "type": "string"
-      }
-    ],
-    "name": "medicines",
-    "outputs": [
-      {
-        "internalType": "string",
-        "name": "id",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "name",
-        "type": "string"
-      },
-      {
-        "internalType": "address",
-        "name": "currentOwner",
-        "type": "address"
-      },
-      {
-        "internalType": "bool",
-        "name": "exists",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -95,8 +67,71 @@ const abi = [
         "type": "string"
       }
     ],
+    "name": "getOwnershipHistory",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "",
+        "type": "address[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "name": "medicines",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "id",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "manufacturer",
+        "type": "string"
+      },
+      {
+        "internalType": "bool",
+        "name": "exists",
+        "type": "bool"
+      },
+      {
+        "internalType": "address",
+        "name": "currentOwner",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "_id",
+        "type": "string"
+      }
+    ],
     "name": "verifyMedicine",
     "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      },
       {
         "internalType": "string",
         "name": "",
@@ -116,7 +151,8 @@ const abi = [
     "stateMutability": "view",
     "type": "function"
   }
-];
+]
+  
 
 // ==============================
 // 🧠 Contract Instance
@@ -147,17 +183,27 @@ app.get("/", (req, res) => {
 
 // Add Medicine
 app.post("/api/addMedicine", async (req, res) => {
-  try {
-    const { id, name } = req.body;
 
-    await contract.methods.addMedicine(id, name).send({
-      from: account,
-      gas: 3000000
+  try {
+
+    const { id, name, manufacturer } = req.body;
+
+    await contract.methods
+      .addMedicine(id, name, manufacturer)
+      .send({
+        from: account,
+        gas: 3000000
+      });
+
+    res.json({
+      message: "Medicine added successfully ✅"
     });
 
-    res.json({ message: "Medicine added successfully ✅" });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+
+    res.status(500).json({
+      error: error.message
+    });
   }
 });
 
@@ -168,16 +214,39 @@ app.get("/api/getMedicine/:id", async (req, res) => {
       .verifyMedicine(req.params.id)
       .call();
 
-    res.json({
+   res.json({
   message: "Medicine fetched successfully",
   data: {
     batchId: result[0],
     name: result[1],
-    currentOwner: result[2]
+    manufacturer: result[2],
+    currentOwner: result[3]
   }
 });
   } catch (error) {
     res.status(500).json({ error: error.message });
+  }
+});
+
+  // 📜 Get Ownership History
+app.get("/api/getHistory/:id", async (req, res) => {
+
+  try {
+
+    const history = await contract.methods
+      .getOwnershipHistory(req.params.id)
+      .call();
+
+    res.json({
+      message: "Ownership history fetched",
+      history
+    });
+
+  } catch (error) {
+
+    res.status(500).json({
+      error: error.message
+    });
   }
 });
 
