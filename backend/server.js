@@ -179,13 +179,20 @@ const scanLogSchema = new mongoose.Schema({
     required: true
   },
 
+  latitude: {
+    type: Number
+  },
+
+  longitude: {
+    type: Number
+  },
+
   scannedAt: {
     type: Date,
     default: Date.now
   }
 
 });
-
 const ScanLog = mongoose.model(
   "ScanLog",
   scanLogSchema
@@ -257,10 +264,16 @@ app.get("/api/getMedicine/:id", async (req, res) => {
       .verifyMedicine(medicineId)
       .call();
 
-    // 📝 Store scan log in MongoDB
-    await ScanLog.create({
-      medicineId
-    });
+    // 📍 Get location from query params
+const latitude = req.query.lat;
+const longitude = req.query.lng;
+
+// 📝 Store scan log in MongoDB
+await ScanLog.create({
+  medicineId,
+  latitude,
+  longitude
+});
 
     // 📊 Count total scans
     const scanCount = await ScanLog.countDocuments({

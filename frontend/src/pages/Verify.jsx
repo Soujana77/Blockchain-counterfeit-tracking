@@ -13,43 +13,61 @@ function Verify() {
   const [history, setHistory] = useState([]);
 
   // 🔍 Verify Medicine
-  const handleVerify = async (id) => {
+const handleVerify = async (id) => {
 
-    try {
+  try {
 
-      // Medicine Data
-      const res = await fetch(
-        `http://127.0.0.1:8000/api/getMedicine/${id}`
-      );
+    // 📍 Get Browser Location
+    navigator.geolocation.getCurrentPosition(
 
-      if (!res.ok) {
-        throw new Error("Not found");
+      async (position) => {
+
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+
+        // 🔍 Verify Medicine + Send Location
+        const res = await fetch(
+          `http://127.0.0.1:8000/api/getMedicine/${id}?lat=${latitude}&lng=${longitude}`
+        );
+
+        if (!res.ok) {
+          throw new Error("Not found");
+        }
+
+        const data = await res.json();
+
+        // 📜 Ownership History
+        const historyRes = await fetch(
+          `http://127.0.0.1:8000/api/getHistory/${id}`
+        );
+
+        const historyData = await historyRes.json();
+
+        setResult(data.data);
+
+        setHistory(historyData.history);
+
+        setStatus("authentic");
+      },
+
+      (error) => {
+
+        console.log(error);
+
+        alert("Location access denied");
       }
 
-      const data = await res.json();
+    );
 
-      // Ownership History
-      const historyRes = await fetch(
-        `http://127.0.0.1:8000/api/getHistory/${id}`
-      );
+  } catch (error) {
 
-      const historyData = await historyRes.json();
+    setResult(null);
 
-      setResult(data.data);
+    setHistory([]);
 
-      setHistory(historyData.history);
-
-      setStatus("authentic");
-
-    } catch (error) {
-
-      setResult(null);
-
-      setHistory([]);
-
-      setStatus("fake");
-    }
-  };
+    setStatus("fake");
+  }
+};
 
   // 🔍 Button Verify
   const handleVerifyClick = () => {
