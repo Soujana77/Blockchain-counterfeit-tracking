@@ -3,18 +3,34 @@ import axios from "axios";
 import { QRCodeCanvas } from "qrcode.react";
 
 export default function Medicine() {
+
   const [id, setId] = useState("");
   const [name, setName] = useState("");
+  const [manufacturer, setManufacturer] = useState("");
+
   const [result, setResult] = useState(null);
+
   const [newOwner, setNewOwner] = useState("");
+
   const [showQR, setShowQR] = useState(false);
 
   // ➕ Add Medicine
   const handleAdd = async () => {
+
     try {
+
+      if (!id || !name || !manufacturer) {
+        alert("Please fill all fields");
+        return;
+      }
+
       const res = await axios.post(
         "http://localhost:8000/api/addMedicine",
-        { id, name }
+        {
+          id,
+          name,
+          manufacturer
+        }
       );
 
       alert(res.data.message);
@@ -23,13 +39,18 @@ export default function Medicine() {
       setShowQR(true);
 
     } catch (err) {
-      alert(err.response?.data?.error || err.message);
+
+      alert(
+        err.response?.data?.error || err.message
+      );
     }
   };
 
   // 🔍 Get Medicine
   const handleGet = async () => {
+
     try {
+
       const res = await axios.get(
         `http://localhost:8000/api/getMedicine/${id}`
       );
@@ -37,22 +58,36 @@ export default function Medicine() {
       setResult(res.data.data);
 
     } catch {
+
       alert("Medicine not found");
     }
   };
 
   // 🔄 Transfer Ownership
   const handleTransfer = async () => {
+
     try {
+
+      if (!id || !newOwner) {
+        alert("Please enter ID and owner address");
+        return;
+      }
+
       const res = await axios.post(
         "http://localhost:8000/api/transferOwnership",
-        { id, newOwner }
+        {
+          id,
+          newOwner
+        }
       );
 
       alert(res.data.message);
 
     } catch (err) {
-      alert(err.response?.data?.error || err.message);
+
+      alert(
+        err.response?.data?.error || err.message
+      );
     }
   };
 
@@ -64,6 +99,7 @@ export default function Medicine() {
         paddingTop: "120px",
       }}
     >
+
       <h2>💊 Medicine Tracker</h2>
 
       {/* Medicine ID */}
@@ -102,9 +138,32 @@ export default function Medicine() {
 
       <br />
 
+      {/* Manufacturer */}
+      <input
+        style={{
+          padding: "10px",
+          margin: "10px 0",
+          width: "250px",
+          backgroundColor: "#fff",
+          color: "#000",
+          borderRadius: "5px",
+          border: "none"
+        }}
+        placeholder="Manufacturer"
+        value={manufacturer}
+        onChange={(e) => setManufacturer(e.target.value)}
+      />
+
+      <br />
+
       {/* Buttons */}
-      <button onClick={handleAdd}>Add Medicine</button>
-      <button onClick={handleGet}>Get Medicine</button>
+      <button onClick={handleAdd}>
+        Add Medicine
+      </button>
+
+      <button onClick={handleGet}>
+        Get Medicine
+      </button>
 
       <br /><br />
 
@@ -141,6 +200,7 @@ export default function Medicine() {
             borderRadius: "10px"
           }}
         >
+
           <h3 style={{ color: "#000" }}>
             Medicine QR Code
           </h3>
@@ -150,20 +210,32 @@ export default function Medicine() {
             size={200}
           />
 
-          <p style={{ color: "#000", marginTop: "10px" }}>
+          <p
+            style={{
+              color: "#000",
+              marginTop: "10px"
+            }}
+          >
             ID: {id}
           </p>
+
         </div>
       )}
 
       {/* Result */}
       {result && (
         <div style={{ marginTop: "20px" }}>
+
           <h3>Result:</h3>
 
           <p>ID: {result.batchId}</p>
+
           <p>Name: {result.name}</p>
+
+          <p>Manufacturer: {result.manufacturer}</p>
+
           <p>Owner: {result.currentOwner}</p>
+
         </div>
       )}
     </div>
