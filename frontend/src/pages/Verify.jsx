@@ -10,11 +10,14 @@ function Verify() {
   const [scanResult, setScanResult] = useState("");
   const [showScanner, setShowScanner] = useState(false);
 
+  const [history, setHistory] = useState([]);
+
   // 🔍 Verify Medicine
   const handleVerify = async (id) => {
 
     try {
 
+      // Medicine Data
       const res = await fetch(
         `http://127.0.0.1:8000/api/getMedicine/${id}`
       );
@@ -25,12 +28,25 @@ function Verify() {
 
       const data = await res.json();
 
+      // Ownership History
+      const historyRes = await fetch(
+        `http://127.0.0.1:8000/api/getHistory/${id}`
+      );
+
+      const historyData = await historyRes.json();
+
       setResult(data.data);
+
+      setHistory(historyData.history);
+
       setStatus("authentic");
 
     } catch (error) {
 
       setResult(null);
+
+      setHistory([]);
+
       setStatus("fake");
     }
   };
@@ -87,16 +103,74 @@ function Verify() {
 
         {/* AUTHENTIC */}
         {status === "authentic" && result && (
-          <div className="mt-6 p-4 bg-green-900/40 border border-green-500 rounded-xl">
+          <div className="mt-6 p-6 bg-green-900/40 border border-green-500 rounded-xl">
 
-            <h3 className="text-green-400 font-semibold text-lg mb-2">
+            <h3 className="text-green-400 font-semibold text-2xl mb-4">
               ✅ Authentic Medicine
             </h3>
 
-            <p>ID: {result.batchId}</p>
-            <p>Name: {result.name}</p>
-            <p>Owner: {result.currentOwner}</p>
+            <div className="space-y-2 text-sm sm:text-base">
 
+              <p>
+                <span className="font-semibold text-cyan-400">
+                  Medicine ID:
+                </span>{" "}
+                {result.batchId}
+              </p>
+
+              <p>
+                <span className="font-semibold text-cyan-400">
+                  Medicine Name:
+                </span>{" "}
+                {result.name}
+              </p>
+
+              <p>
+                <span className="font-semibold text-cyan-400">
+                  Manufacturer:
+                </span>{" "}
+                {result.manufacturer}
+              </p>
+
+              <p className="break-words">
+                <span className="font-semibold text-cyan-400">
+                  Current Owner:
+                </span>{" "}
+                {result.currentOwner}
+              </p>
+
+            </div>
+
+            {/* OWNERSHIP HISTORY */}
+            <div className="mt-6">
+
+              <h4 className="text-lg font-semibold text-yellow-400 mb-3">
+                📜 Ownership History
+              </h4>
+
+              <div className="space-y-3">
+
+                {history.map((owner, index) => (
+
+                  <div
+                    key={index}
+                    className="p-3 rounded-lg bg-slate-800 border border-white/10 break-words"
+                  >
+
+                    <p className="text-sm text-gray-300">
+                      Owner #{index + 1}
+                    </p>
+
+                    <p className="text-cyan-400 text-sm">
+                      {owner}
+                    </p>
+
+                  </div>
+
+                ))}
+
+              </div>
+            </div>
           </div>
         )}
 
