@@ -265,22 +265,37 @@ app.get("/api/getMedicine/:id", async (req, res) => {
       .call();
 
     // 📍 Get location from query params
-const latitude = req.query.lat;
-const longitude = req.query.lng;
+    const latitude = req.query.lat;
+    const longitude = req.query.lng;
 
-// 📝 Store scan log in MongoDB
-await ScanLog.create({
-  medicineId,
-  latitude,
-  longitude
-});
+    // 📝 Store scan log in MongoDB
+    await ScanLog.create({
+      medicineId,
+      latitude,
+      longitude
+    });
 
     // 📊 Count total scans
     const scanCount = await ScanLog.countDocuments({
       medicineId
     });
 
+    // 🚨 Suspicious Detection
+    let suspicious = false;
+
+    let warning = "";
+
+    if (scanCount > 5) {
+
+      suspicious = true;
+
+      warning =
+        "⚠ Possible Counterfeit Product Detected";
+    }
+
+    // ✅ Send response
     res.json({
+
       message: "Medicine fetched successfully",
 
       data: {
@@ -288,7 +303,9 @@ await ScanLog.create({
         name: result[1],
         manufacturer: result[2],
         currentOwner: result[3],
-        scanCount
+        scanCount,
+        suspicious,
+        warning
       }
     });
 

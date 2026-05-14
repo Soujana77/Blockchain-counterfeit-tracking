@@ -157,38 +157,32 @@ const handleVerify = async (id) => {
                 {result.currentOwner}
               </p>
 
-            </div>
+              <p>
+  <span className="font-semibold text-cyan-400">
+    Total Scans:
+  </span>{" "}
+  {result.scanCount}
+</p>
 
-            {/* OWNERSHIP HISTORY */}
-            <div className="mt-6">
+   </div>
 
-              <h4 className="text-lg font-semibold text-yellow-400 mb-3">
-                📜 Ownership History
-              </h4>
+{/* 🚨 Suspicious Warning */}
+{result.suspicious && (
 
-              <div className="space-y-3">
+  <div className="mt-6 p-4 bg-red-900/40 border border-red-500 rounded-xl">
 
-                {history.map((owner, index) => (
+    <h3 className="text-red-400 font-bold text-lg">
+      {result.warning}
+    </h3>
 
-                  <div
-                    key={index}
-                    className="p-3 rounded-lg bg-slate-800 border border-white/10 break-words"
-                  >
+    <p className="text-sm text-gray-300 mt-2">
+      Excessive scan activity detected for this medicine.
+    </p>
 
-                    <p className="text-sm text-gray-300">
-                      Owner #{index + 1}
-                    </p>
+  </div>
+)}
 
-                    <p className="text-cyan-400 text-sm">
-                      {owner}
-                    </p>
-
-                  </div>
-
-                ))}
-
-              </div>
-            </div>
+{/* OWNERSHIP HISTORY */}
           </div>
         )}
 
