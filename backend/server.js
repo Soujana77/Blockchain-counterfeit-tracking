@@ -1,6 +1,7 @@
 const express = require("express");
 const { Web3 } = require("web3");
 const cors = require("cors");
+const mongoose = require("mongoose");
 
 const app = express();
 app.use(express.json());
@@ -10,6 +11,21 @@ app.use(cors());
 // 🔗 Connect to Ganache
 // ==============================
 const web3 = new Web3("http://127.0.0.1:7545");
+
+// ==============================
+// 🍃 Connect MongoDB Atlas
+// ==============================
+mongoose.connect(
+  "mongodb+srv://varshajanya77_db_user:STfarNTvAkF1dZxE@drug-traceability-db.5ak38uz.mongodb.net/drugtraceability?retryWrites=true&w=majority&appName=drug-traceability-db"
+)
+
+.then(() => {
+  console.log("MongoDB Connected ✅");
+})
+
+.catch((err) => {
+  console.log("MongoDB Error ❌", err);
+});
 
 // ==============================
 // 📌 Contract Details
@@ -153,11 +169,33 @@ const abi =
   }
 ]
   
+// ==============================
+// 📜 Scan Log Schema
+// ==============================
+const scanLogSchema = new mongoose.Schema({
+
+  medicineId: {
+    type: String,
+    required: true
+  },
+
+  scannedAt: {
+    type: Date,
+    default: Date.now
+  }
+
+});
+
+const ScanLog = mongoose.model(
+  "ScanLog",
+  scanLogSchema
+);
 
 // ==============================
 // 🧠 Contract Instance
 // ==============================
 const contract = new web3.eth.Contract(abi, contractAddress);
+
 
 // ==============================
 // 👤 Get Default Account
@@ -209,22 +247,43 @@ app.post("/api/addMedicine", async (req, res) => {
 
 // Get Medicine
 app.get("/api/getMedicine/:id", async (req, res) => {
+
   try {
+
+    const medicineId = req.params.id;
+
+    // 🔍 Verify from blockchain
     const result = await contract.methods
-      .verifyMedicine(req.params.id)
+      .verifyMedicine(medicineId)
       .call();
 
-   res.json({
-  message: "Medicine fetched successfully",
-  data: {
-    batchId: result[0],
-    name: result[1],
-    manufacturer: result[2],
-    currentOwner: result[3]
-  }
-});
+    // 📝 Store scan log in MongoDB
+    await ScanLog.create({
+      medicineId
+    });
+
+    // 📊 Count total scans
+    const scanCount = await ScanLog.countDocuments({
+      medicineId
+    });
+
+    res.json({
+      message: "Medicine fetched successfully",
+
+      data: {
+        batchId: result[0],
+        name: result[1],
+        manufacturer: result[2],
+        currentOwner: result[3],
+        scanCount
+      }
+    });
+
   } catch (error) {
-    res.status(500).json({ error: error.message });
+
+    res.status(500).json({
+      error: error.message
+    });
   }
 });
 
@@ -240,6 +299,29 @@ app.get("/api/getHistory/:id", async (req, res) => {
     res.json({
       message: "Ownership history fetched",
       history
+    });
+
+  } catch (error) {
+
+    res.status(500).json({
+      error: error.message
+    });
+  }
+});
+
+// 📜 Get Scan History
+app.get("/api/scanHistory/:id", async (req, res) => {
+
+  try {
+
+    const logs = await ScanLog.find({
+      medicineId: req.params.id
+    });
+
+    res.json({
+      message: "Scan history fetched",
+      totalScans: logs.length,
+      logs
     });
 
   } catch (error) {
