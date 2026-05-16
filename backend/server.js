@@ -2,6 +2,7 @@ const express = require("express");
 const { Web3 } = require("web3");
 const cors = require("cors");
 const mongoose = require("mongoose");
+const geolib = require("geolib");
 
 const app = express();
 app.use(express.json());
@@ -264,33 +265,87 @@ app.get("/api/getMedicine/:id", async (req, res) => {
       .verifyMedicine(medicineId)
       .call();
 
-    // 📍 Get location from query params
-    const latitude = req.query.lat;
-    const longitude = req.query.lng;
-
-    // 📝 Store scan log in MongoDB
-    await ScanLog.create({
-      medicineId,
-      latitude,
-      longitude
-    });
-
-    // 📊 Count total scans
-    const scanCount = await ScanLog.countDocuments({
-      medicineId
-    });
+    // 📍 Current location
+    const latitude = parseFloat(req.query.lat);
+    const longitude = parseFloat(req.query.lng);
 
     // 🚨 Suspicious Detection
     let suspicious = false;
 
     let warning = "";
 
+    // 📜 Get previous scan
+    const previousScan = await ScanLog
+      .findOne({ medicineId })
+      .sort({ scannedAt: -1 });
+
+    // 🌍 Impossible Location Jump Detection
+    if (
+      previousScan &&
+      previousScan.latitude &&
+      previousScan.longitude
+    ) {
+
+      // 📏 Calculate distance
+      const distanceInMeters = geolib.getDistance(
+
+        {
+          latitude: previousScan.latitude,
+          longitude: previousScan.longitude
+        },
+
+        {
+          latitude,
+          longitude
+        }
+      );
+
+      // Convert meters → km
+      const distanceInKm =
+        distanceInMeters / 1000;
+
+      // ⏱ Time difference
+      const previousTime =
+        new Date(previousScan.scannedAt).getTime();
+
+      const currentTime =
+        new Date().getTime();
+
+      const timeDifferenceMinutes =
+        (currentTime - previousTime) / 60000;
+
+      // 🚨 Impossible travel logic
+      if (
+        distanceInKm > 50 &&
+        timeDifferenceMinutes < 5
+      ) {
+
+        suspicious = true;
+
+        warning =
+          "⚠ Possible Cloned QR / Counterfeit Product";
+      }
+    }
+
+    // 📝 Store new scan
+    await ScanLog.create({
+      medicineId,
+      latitude,
+      longitude
+    });
+
+    // 📊 Total scans
+    const scanCount = await ScanLog.countDocuments({
+      medicineId
+    });
+
+    // 🚨 Excessive scans
     if (scanCount > 5) {
 
       suspicious = true;
 
       warning =
-        "⚠ Possible Counterfeit Product Detected";
+        "⚠ Excessive Scan Activity Detected";
     }
 
     // ✅ Send response
