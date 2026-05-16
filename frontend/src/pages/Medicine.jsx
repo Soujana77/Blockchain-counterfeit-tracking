@@ -20,7 +20,9 @@ export default function Medicine() {
     try {
 
       if (!id || !name || !manufacturer) {
+
         alert("Please fill all fields");
+
         return;
       }
 
@@ -35,7 +37,6 @@ export default function Medicine() {
 
       alert(res.data.message);
 
-      // Show QR after successful add
       setShowQR(true);
 
     } catch (err) {
@@ -69,7 +70,9 @@ export default function Medicine() {
     try {
 
       if (!id || !newOwner) {
+
         alert("Please enter ID and owner address");
+
         return;
       }
 
@@ -92,152 +95,169 @@ export default function Medicine() {
   };
 
   return (
-    <div
-      style={{
-        padding: "20px",
-        color: "white",
-        paddingTop: "120px",
-      }}
-    >
 
-      <h2>💊 Medicine Tracker</h2>
+    <div className="min-h-screen text-white px-6 pt-28 bg-[#020617]">
 
-      {/* Medicine ID */}
-      <input
-        style={{
-          padding: "10px",
-          margin: "10px 0",
-          width: "250px",
-          backgroundColor: "#fff",
-          color: "#000",
-          borderRadius: "5px",
-          border: "none"
-        }}
-        placeholder="Medicine ID"
-        value={id}
-        onChange={(e) => setId(e.target.value)}
-      />
+      {/* PAGE TITLE */}
+      <h1 className="text-5xl font-bold text-center mb-12 text-cyan-400">
 
-      <br />
+        💊 Medicine Tracker
 
-      {/* Medicine Name */}
-      <input
-        style={{
-          padding: "10px",
-          margin: "10px 0",
-          width: "250px",
-          backgroundColor: "#fff",
-          color: "#000",
-          borderRadius: "5px",
-          border: "none"
-        }}
-        placeholder="Medicine Name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-      />
+      </h1>
 
-      <br />
+      {/* MAIN CARD */}
+      <div className="max-w-3xl mx-auto bg-slate-900/70 border border-cyan-500/20 rounded-3xl p-8 shadow-2xl">
 
-      {/* Manufacturer */}
-      <input
-        style={{
-          padding: "10px",
-          margin: "10px 0",
-          width: "250px",
-          backgroundColor: "#fff",
-          color: "#000",
-          borderRadius: "5px",
-          border: "none"
-        }}
-        placeholder="Manufacturer"
-        value={manufacturer}
-        onChange={(e) => setManufacturer(e.target.value)}
-      />
+        {/* INPUTS */}
+        <div className="grid gap-5">
 
-      <br />
-
-      {/* Buttons */}
-      <button onClick={handleAdd}>
-        Add Medicine
-      </button>
-
-      <button onClick={handleGet}>
-        Get Medicine
-      </button>
-
-      <br /><br />
-
-      {/* Transfer Ownership */}
-      <input
-        style={{
-          padding: "10px",
-          margin: "10px 0",
-          width: "250px",
-          backgroundColor: "#fff",
-          color: "#000",
-          borderRadius: "5px",
-          border: "none"
-        }}
-        placeholder="New Owner Address"
-        value={newOwner}
-        onChange={(e) => setNewOwner(e.target.value)}
-      />
-
-      <br />
-
-      <button onClick={handleTransfer}>
-        Transfer Ownership
-      </button>
-
-      {/* QR CODE */}
-      {showQR && (
-        <div
-          style={{
-            marginTop: "30px",
-            background: "#fff",
-            display: "inline-block",
-            padding: "20px",
-            borderRadius: "10px"
-          }}
-        >
-
-          <h3 style={{ color: "#000" }}>
-            Medicine QR Code
-          </h3>
-
-          <QRCodeCanvas
+          <input
+            type="text"
+            placeholder="Medicine ID"
             value={id}
-            size={200}
+            onChange={(e) => setId(e.target.value)}
+            className="w-full px-5 py-4 rounded-xl bg-slate-800 border border-white/10 outline-none focus:border-cyan-400"
           />
 
-          <p
-            style={{
-              color: "#000",
-              marginTop: "10px"
-            }}
+          <input
+            type="text"
+            placeholder="Medicine Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="w-full px-5 py-4 rounded-xl bg-slate-800 border border-white/10 outline-none focus:border-cyan-400"
+          />
+
+          <input
+            type="text"
+            placeholder="Manufacturer"
+            value={manufacturer}
+            onChange={(e) => setManufacturer(e.target.value)}
+            className="w-full px-5 py-4 rounded-xl bg-slate-800 border border-white/10 outline-none focus:border-cyan-400"
+          />
+
+        </div>
+
+        {/* ACTION BUTTONS */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8">
+
+          <button
+            onClick={handleAdd}
+            className="py-4 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-900 font-bold transition duration-300 shadow-lg"
           >
-            ID: {id}
-          </p>
+            ➕ Add Medicine
+          </button>
+
+          <button
+            onClick={handleGet}
+            className="py-4 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-900 font-bold transition duration-300 shadow-lg"
+          >
+            🔍 Get Medicine
+          </button>
 
         </div>
-      )}
 
-      {/* Result */}
-      {result && (
-        <div style={{ marginTop: "20px" }}>
+        {/* TRANSFER OWNERSHIP */}
+        <div className="mt-10 border-t border-white/10 pt-8">
 
-          <h3>Result:</h3>
+          <h2 className="text-2xl font-semibold mb-5 text-yellow-400">
 
-          <p>ID: {result.batchId}</p>
+            🔄 Transfer Ownership
 
-          <p>Name: {result.name}</p>
+          </h2>
 
-          <p>Manufacturer: {result.manufacturer}</p>
+          <input
+            type="text"
+            placeholder="New Owner Wallet Address"
+            value={newOwner}
+            onChange={(e) => setNewOwner(e.target.value)}
+            className="w-full px-5 py-4 rounded-xl bg-slate-800 border border-white/10 outline-none focus:border-yellow-400"
+          />
 
-          <p>Owner: {result.currentOwner}</p>
+          <button
+            onClick={handleTransfer}
+            className="w-full mt-5 py-4 rounded-xl bg-yellow-500 hover:bg-yellow-400 text-slate-900 font-bold transition duration-300 shadow-lg"
+          >
+            🚀 Transfer Ownership
+          </button>
 
         </div>
-      )}
+
+        {/* QR CODE */}
+        {showQR && (
+
+          <div className="mt-10 bg-white p-8 rounded-2xl text-center">
+
+            <h3 className="text-2xl font-bold text-slate-900 mb-5">
+
+              📷 Medicine QR Code
+
+            </h3>
+
+            <div className="flex justify-center">
+
+              <QRCodeCanvas
+                value={id}
+                size={220}
+              />
+
+            </div>
+
+            <p className="mt-5 text-slate-900 font-semibold">
+
+              Medicine ID: {id}
+
+            </p>
+
+          </div>
+        )}
+
+        {/* RESULT */}
+        {result && (
+
+          <div className="mt-10 p-6 rounded-2xl bg-emerald-900/30 border border-emerald-500">
+
+            <h3 className="text-3xl font-bold text-emerald-400 mb-5">
+
+              ✅ Medicine Details
+
+            </h3>
+
+            <div className="space-y-3 text-lg">
+
+              <p>
+                <span className="text-cyan-400 font-semibold">
+                  ID:
+                </span>{" "}
+                {result.batchId}
+              </p>
+
+              <p>
+                <span className="text-cyan-400 font-semibold">
+                  Name:
+                </span>{" "}
+                {result.name}
+              </p>
+
+              <p>
+                <span className="text-cyan-400 font-semibold">
+                  Manufacturer:
+                </span>{" "}
+                {result.manufacturer}
+              </p>
+
+              <p className="break-words">
+                <span className="text-cyan-400 font-semibold">
+                  Current Owner:
+                </span>{" "}
+                {result.currentOwner}
+              </p>
+
+            </div>
+
+          </div>
+        )}
+
+      </div>
     </div>
   );
 }
