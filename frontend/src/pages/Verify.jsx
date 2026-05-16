@@ -166,18 +166,33 @@ const handleVerify = async (id) => {
 
    </div>
 
-{/* 🚨 Suspicious Warning */}
-{result.suspicious && (
+{/* 🚨 Suspicious Warnings */}
+{result.suspicious && result.warnings?.length > 0 && (
 
   <div className="mt-6 p-4 bg-red-900/40 border border-red-500 rounded-xl">
 
-    <h3 className="text-red-400 font-bold text-lg">
-      {result.warning}
+    <h3 className="text-red-400 font-bold text-lg mb-3">
+      🚨 Suspicious Activity Detected
     </h3>
 
-    <p className="text-sm text-gray-300 mt-2">
-      Excessive scan activity detected for this medicine.
-    </p>
+    <div className="space-y-3">
+
+      {result.warnings.map((warning, index) => (
+
+        <div
+          key={index}
+          className="p-3 bg-red-950/40 rounded-lg border border-red-500/30"
+        >
+
+          <p className="text-red-300 font-semibold">
+            {warning}
+          </p>
+
+        </div>
+
+      ))}
+
+    </div>
 
   </div>
 )}

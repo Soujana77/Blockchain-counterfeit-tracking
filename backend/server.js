@@ -270,9 +270,9 @@ app.get("/api/getMedicine/:id", async (req, res) => {
     const longitude = parseFloat(req.query.lng);
 
     // 🚨 Suspicious Detection
-    let suspicious = false;
+  let suspicious = false;
 
-    let warning = "";
+let warnings = [];
 
     // 📜 Get previous scan
     const previousScan = await ScanLog
@@ -322,8 +322,9 @@ app.get("/api/getMedicine/:id", async (req, res) => {
 
         suspicious = true;
 
-        warning =
-          "⚠ Possible Cloned QR / Counterfeit Product";
+       warnings.push(
+  "⚠ Possible Cloned QR / Counterfeit Product"
+);
       }
     }
 
@@ -344,8 +345,9 @@ app.get("/api/getMedicine/:id", async (req, res) => {
 
       suspicious = true;
 
-      warning =
-        "⚠ Excessive Scan Activity Detected";
+     warnings.push(
+  "⚠ Excessive Scan Activity Detected"
+);
     }
 
     // ✅ Send response
@@ -360,7 +362,7 @@ app.get("/api/getMedicine/:id", async (req, res) => {
         currentOwner: result[3],
         scanCount,
         suspicious,
-        warning
+        warnings
       }
     });
 
