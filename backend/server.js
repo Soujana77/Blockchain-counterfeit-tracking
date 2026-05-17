@@ -34,7 +34,7 @@ mongoose.connect(
 const contractAddress = "0x9f83111F05Dd0b05d0c3De0e844A939499C8AE00";
 
 const abi = 
-    [
+  [
   {
     "inputs": [
       {
@@ -169,6 +169,7 @@ const abi =
     "type": "function"
   }
 ]
+
   
 // ==============================
 // 📜 Scan Log Schema
