@@ -31,7 +31,7 @@ mongoose.connect(
 // ==============================
 // 📌 Contract Details
 // ==============================
-const contractAddress = "0xfB6b898E1f6bE2fE5DD2c21091835803f2bb0f0b";
+const contractAddress = "0x9f83111F05Dd0b05d0c3De0e844A939499C8AE00";
 
 const abi = 
     [
@@ -281,10 +281,12 @@ let warnings = [];
 
     // 🌍 Impossible Location Jump Detection
     if (
-      previousScan &&
-      previousScan.latitude &&
-      previousScan.longitude
-    ) {
+  previousScan &&
+  previousScan.latitude !== undefined &&
+  previousScan.longitude !== undefined &&
+  !isNaN(latitude) &&
+  !isNaN(longitude)
+) {
 
       // 📏 Calculate distance
       const distanceInMeters = geolib.getDistance(
@@ -368,10 +370,12 @@ let warnings = [];
 
   } catch (error) {
 
-    res.status(500).json({
-      error: error.message
-    });
-  }
+  console.log("VERIFY ERROR ❌", error);
+
+  res.status(500).json({
+    error: error.message
+  });
+}
 });
 
   // 📜 Get Ownership History

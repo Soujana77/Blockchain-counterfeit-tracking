@@ -1,5 +1,6 @@
 import { useState } from "react";
 import QrScanner from "../components/QrScanner";
+import ScanMap from "../components/ScanMap";
 
 function Verify() {
 
@@ -11,6 +12,7 @@ function Verify() {
   const [showScanner, setShowScanner] = useState(false);
 
   const [history, setHistory] = useState([]);
+  const [scanLogs, setScanLogs] = useState([]);
 
   // 🔍 Verify Medicine
 const handleVerify = async (id) => {
@@ -43,11 +45,20 @@ const handleVerify = async (id) => {
 
         const historyData = await historyRes.json();
 
-        setResult(data.data);
+// 🌍 Fetch scan logs
+const scanRes = await fetch(
+  `http://127.0.0.1:8000/api/scanHistory/${id}`
+);
 
-        setHistory(historyData.history);
+const scanData = await scanRes.json();
 
-        setStatus("authentic");
+setResult(data.data);
+
+setHistory(historyData.history);
+
+setScanLogs(scanData.logs);
+
+setStatus("authentic");
       },
 
       (error) => {
@@ -251,7 +262,11 @@ const handleVerify = async (id) => {
             </div>
           )}
 
-        </div>
+               {/* 🌍 MAP */}
+        {scanLogs.length > 0 && (
+          <ScanMap logs={scanLogs} />
+        )}
+      </div>
       </div>
     </div>
   );
