@@ -441,6 +441,53 @@ app.post("/api/transferOwnership", async (req, res) => {
 });
 
 // ==============================
+// 📊 Analytics Endpoint
+// ==============================
+app.get("/api/analytics", async (req, res) => {
+  try {
+    // Total scans from MongoDB
+    const totalScans = await ScanLog.countDocuments();
+
+    // Recent scans (last 10)
+    const recentScans = await ScanLog.find()
+      .sort({ scannedAt: -1 })
+      .limit(10);
+
+    // Total unique medicines from blockchain events (approximate from scans)
+    const uniqueMedicines = await ScanLog.distinct("medicineId");
+    const totalMedicines = uniqueMedicines.length;
+
+    // Counterfeit alerts from suspicious scans
+    const counterfeitAlerts = await ScanLog.aggregate([
+      {
+        $group: {
+          _id: "$medicineId",
+          scanCount: { $sum: 1 }
+        }
+      },
+      {
+        $match: {
+          scanCount: { $gt: 5 }
+        }
+      }
+    ]);
+
+    // Suspicious products count
+    const suspiciousCount = counterfeitAlerts.length;
+
+    res.json({
+      totalMedicines,
+      totalScans,
+      suspiciousCount,
+      recentScans,
+      counterfeitAlerts
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// ==============================
 // 🟢 START SERVER
 // ==============================
 const PORT = 8000;

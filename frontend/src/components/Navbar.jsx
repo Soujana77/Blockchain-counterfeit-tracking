@@ -53,6 +53,16 @@ function Navbar() {
             </Link>
           </li>
 
+          {/* Admin */}
+          <li>
+            <Link
+              to="/admin"
+              className="px-5 py-2 rounded-xl bg-red-500 hover:bg-red-400 text-white font-semibold transition"
+            >
+              Admin
+            </Link>
+          </li>
+
         </ul>
       </div>
     </nav>
