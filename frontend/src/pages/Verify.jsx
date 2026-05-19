@@ -101,6 +101,11 @@ setStatus("authentic");
       handleVerify(data);
     }
   };
+  
+// ⏰ Expiry Check
+const isExpired =
+  result?.expiryDate &&
+  new Date(result.expiryDate) < new Date();
 
   return (
     <div className="min-h-screen text-white px-6 pt-28">
@@ -130,7 +135,10 @@ setStatus("authentic");
           Verify Medicine
         </button>
 
+        
+
         {/* AUTHENTIC */}
+
         {status === "authentic" && result && (
           <div className="mt-6 p-6 bg-green-900/40 border border-green-500 rounded-xl">
 
@@ -138,44 +146,104 @@ setStatus("authentic");
               ✅ Authentic Medicine
             </h3>
 
-            <div className="space-y-2 text-sm sm:text-base">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
 
-              <p>
-                <span className="font-semibold text-cyan-400">
-                  Medicine ID:
-                </span>{" "}
-                {result.batchId}
-              </p>
+  <div className="bg-slate-800/50 p-4 rounded-xl">
+    <p className="text-cyan-400 font-semibold">
+      Medicine ID
+    </p>
+    <p>{result.batchId}</p>
+  </div>
 
-              <p>
-                <span className="font-semibold text-cyan-400">
-                  Medicine Name:
-                </span>{" "}
-                {result.name}
-              </p>
+  <div className="bg-slate-800/50 p-4 rounded-xl">
+    <p className="text-cyan-400 font-semibold">
+      Medicine Name
+    </p>
+    <p>{result.name}</p>
+  </div>
 
-              <p>
-                <span className="font-semibold text-cyan-400">
-                  Manufacturer:
-                </span>{" "}
-                {result.manufacturer}
-              </p>
+  <div className="bg-slate-800/50 p-4 rounded-xl">
+    <p className="text-cyan-400 font-semibold">
+      Manufacturer
+    </p>
+    <p>{result.manufacturer}</p>
+  </div>
 
-              <p className="break-words">
-                <span className="font-semibold text-cyan-400">
-                  Current Owner:
-                </span>{" "}
-                {result.currentOwner}
-              </p>
+  <div className="bg-slate-800/50 p-4 rounded-xl break-words">
+    <p className="text-cyan-400 font-semibold">
+      Current Owner
+    </p>
+    <p>{result.currentOwner}</p>
+  </div>
 
-              <p>
-  <span className="font-semibold text-cyan-400">
-    Total Scans:
-  </span>{" "}
-  {result.scanCount}
-</p>
+  <div className="bg-slate-800/50 p-4 rounded-xl">
+    <p className="text-cyan-400 font-semibold">
+      Batch Number
+    </p>
+    <p>{result.batchNumber}</p>
+  </div>
 
-   </div>
+  <div className="bg-slate-800/50 p-4 rounded-xl">
+    <p className="text-cyan-400 font-semibold">
+      Dosage
+    </p>
+    <p>{result.dosage}</p>
+  </div>
+
+  <div className="bg-slate-800/50 p-4 rounded-xl">
+    <p className="text-cyan-400 font-semibold">
+      Manufacturing Date
+    </p>
+    <p>{result.manufacturingDate}</p>
+  </div>
+
+  <div className="bg-slate-800/50 p-4 rounded-xl">
+    <p className="text-cyan-400 font-semibold">
+      Expiry Date
+    </p>
+    <p>{result.expiryDate}</p>
+  </div>
+
+  <div className="bg-slate-800/50 p-4 rounded-xl">
+    <p className="text-cyan-400 font-semibold">
+      Total Scans
+    </p>
+    <p>{result.scanCount}</p>
+  </div>
+
+</div>
+{/* ⏰ Expiry Warning */}
+{isExpired && (
+
+  <div className="mt-5 p-4 bg-red-900/40 border border-red-500 rounded-xl">
+
+    <h3 className="text-red-400 font-bold text-lg">
+
+      ⚠ Expired Medicine Detected
+
+    </h3>
+
+    <p className="text-slate-300 mt-2">
+
+      This medicine has crossed its expiry date
+      and may not be safe for consumption.
+
+    </p>
+
+  </div>
+)}
+{/* DESCRIPTION */}
+<div className="mt-5 bg-slate-800/50 p-5 rounded-xl">
+
+  <p className="text-cyan-400 font-semibold mb-2">
+    Description
+  </p>
+
+  <p className="text-slate-300 leading-relaxed">
+    {result.description}
+  </p>
+
+</div>
 
 {/* 🚨 Suspicious Warnings */}
 {result.suspicious && result.warnings?.length > 0 && (

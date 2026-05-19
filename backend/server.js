@@ -3,6 +3,7 @@ const { Web3 } = require("web3");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const geolib = require("geolib");
+const MedicineDetails = require("./models/MedicineDetails");
 
 const app = express();
 app.use(express.json());
@@ -246,6 +247,24 @@ app.post("/api/addMedicine", async (req, res) => {
       message: "Medicine added successfully ✅"
     });
 
+    // 📝 Store extra medicine details
+await MedicineDetails.create({
+
+  medicineId: id,
+
+  manufacturer,
+
+  batchNumber,
+
+  manufacturingDate,
+
+  expiryDate,
+
+  dosage,
+
+  description
+});
+
   } catch (error) {
 
     res.status(500).json({
@@ -363,11 +382,21 @@ let warnings = [];
         name: result[1],
         manufacturer: result[2],
         currentOwner: result[3],
+        manufacturer: details?.manufacturer,
+batchNumber: details?.batchNumber,
+manufacturingDate: details?.manufacturingDate,
+expiryDate: details?.expiryDate,
+dosage: details?.dosage,
+description: details?.description,
         scanCount,
         suspicious,
         warnings
       }
     });
+    // 📦 Get medicine details
+const details = await MedicineDetails.findOne({
+  medicineId
+});
 
   } catch (error) {
 

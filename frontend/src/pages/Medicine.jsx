@@ -7,12 +7,18 @@ export default function Medicine() {
   const [id, setId] = useState("");
   const [name, setName] = useState("");
   const [manufacturer, setManufacturer] = useState("");
+  const [batchNumber, setBatchNumber] = useState("");
+const [expiryDate, setExpiryDate] = useState("");
+const [manufacturingDate, setManufacturingDate] = useState("");
+const [dosage, setDosage] = useState("");
+const [description, setDescription] = useState("");
 
   const [result, setResult] = useState(null);
 
   const [newOwner, setNewOwner] = useState("");
 
   const [showQR, setShowQR] = useState(false);
+  
 
   // ➕ Add Medicine
   const handleAdd = async () => {
@@ -29,10 +35,15 @@ export default function Medicine() {
       const res = await axios.post(
         "http://localhost:8000/api/addMedicine",
         {
-          id,
-          name,
-          manufacturer
-        }
+  id,
+  name,
+  manufacturer,
+  batchNumber,
+  expiryDate,
+  manufacturingDate,
+  dosage,
+  description
+}
       );
 
       alert(res.data.message);
@@ -134,6 +145,39 @@ export default function Medicine() {
             onChange={(e) => setManufacturer(e.target.value)}
             className="w-full px-5 py-4 rounded-xl bg-slate-800 border border-white/10 outline-none focus:border-cyan-400"
           />
+          <input
+  type="text"
+  placeholder="Batch Number"
+  value={batchNumber}
+  onChange={(e) => setBatchNumber(e.target.value)}
+  className="w-full px-5 py-4 rounded-xl bg-slate-800 border border-white/10 outline-none focus:border-cyan-400"
+/>
+<input
+  type="date"
+  value={manufacturingDate}
+  onChange={(e) => setManufacturingDate(e.target.value)}
+  className="w-full px-5 py-4 rounded-xl bg-slate-800 border border-white/10 outline-none focus:border-cyan-400"
+/>
+<input
+  type="date"
+  value={expiryDate}
+  onChange={(e) => setExpiryDate(e.target.value)}
+  className="w-full px-5 py-4 rounded-xl bg-slate-800 border border-white/10 outline-none focus:border-cyan-400"
+/>
+<input
+  type="text"
+  placeholder="Dosage (e.g. 500mg)"
+  value={dosage}
+  onChange={(e) => setDosage(e.target.value)}
+  className="w-full px-5 py-4 rounded-xl bg-slate-800 border border-white/10 outline-none focus:border-cyan-400"
+/>
+<textarea
+  placeholder="Medicine Description"
+  value={description}
+  onChange={(e) => setDescription(e.target.value)}
+  className="w-full px-5 py-4 rounded-xl bg-slate-800 border border-white/10 outline-none focus:border-cyan-400"
+  rows={4}
+/>
 
         </div>
 
