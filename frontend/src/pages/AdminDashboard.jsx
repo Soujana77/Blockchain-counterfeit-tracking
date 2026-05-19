@@ -79,6 +79,27 @@ const suspiciousData = [
     value: analytics.suspiciousCount
   }
 ];
+// 🚨 Live Alert Feed
+const liveAlerts = [
+
+  {
+    type: "High Risk",
+    message: "Possible cloned QR detected for MED003",
+    time: "2 mins ago"
+  },
+
+  {
+    type: "Warning",
+    message: "Excessive scan activity detected",
+    time: "10 mins ago"
+  },
+
+  {
+    type: "Info",
+    message: "Ownership transferred successfully",
+    time: "25 mins ago"
+  }
+];
 
   // Map recent scans for visualization
   const scanLocations = analytics.recentScans
@@ -263,7 +284,61 @@ const suspiciousData = [
           </div>
         </div>
       )}
+{/* 🚨 Live Security Alerts */}
+<div className="max-w-7xl mx-auto mt-10">
 
+  <div className="bg-slate-900/60 border border-red-500/20 rounded-2xl p-6">
+
+    <h3 className="text-2xl font-bold text-red-400 mb-6">
+
+      🚨 Live Security Alerts
+
+    </h3>
+
+    <div className="space-y-4">
+
+      {liveAlerts.map((alert, index) => (
+
+        <div
+          key={index}
+          className="p-4 rounded-xl border border-white/10 bg-slate-800/50 flex justify-between items-center"
+        >
+
+          <div>
+
+            <p className="font-semibold text-white">
+              {alert.message}
+            </p>
+
+            <p className="text-sm text-slate-400 mt-1">
+              {alert.time}
+            </p>
+
+          </div>
+
+          <span
+            className={`px-3 py-1 rounded-full text-sm font-semibold
+              ${
+                alert.type === "High Risk"
+                  ? "bg-red-500/20 text-red-400"
+                  : alert.type === "Warning"
+                  ? "bg-yellow-500/20 text-yellow-400"
+                  : "bg-cyan-500/20 text-cyan-400"
+              }`}
+          >
+
+            {alert.type}
+
+          </span>
+
+        </div>
+      ))}
+
+    </div>
+
+  </div>
+
+</div>
       {/* Quick Actions */}
       <div className="max-w-7xl mx-auto mt-12">
         <div className="flex flex-wrap gap-4 justify-center">
