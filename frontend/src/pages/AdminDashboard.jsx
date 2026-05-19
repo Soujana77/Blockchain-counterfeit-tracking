@@ -1,6 +1,17 @@
 import { useEffect, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
 import ScanMap from "../components/ScanMap";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell
+} from "recharts";
 
 export default function AdminDashboard() {
   const [analytics, setAnalytics] = useState({
@@ -43,6 +54,31 @@ export default function AdminDashboard() {
       </div>
     );
   }
+  // 📈 Line Chart Data
+const scanTrendData = [
+
+  { day: "Mon", scans: 12 },
+  { day: "Tue", scans: 19 },
+  { day: "Wed", scans: 8 },
+  { day: "Thu", scans: 25 },
+  { day: "Fri", scans: 17 },
+  { day: "Sat", scans: 30 },
+  { day: "Sun", scans: 21 }
+];
+
+// 🚨 Pie Chart Data
+const suspiciousData = [
+
+  {
+    name: "Safe",
+    value: analytics.totalScans - analytics.suspiciousCount
+  },
+
+  {
+    name: "Suspicious",
+    value: analytics.suspiciousCount
+  }
+];
 
   // Map recent scans for visualization
   const scanLocations = analytics.recentScans
@@ -62,7 +98,77 @@ export default function AdminDashboard() {
         </h1>
         <p className="text-slate-400">Real-time blockchain drug traceability insights</p>
       </div>
+{/* 📈 Analytics Charts */}
+<div className="max-w-7xl mx-auto mt-10 grid grid-cols-1 lg:grid-cols-2 gap-8">
 
+  {/* Scan Trend */}
+  <div className="bg-slate-900/60 border border-cyan-500/20 rounded-2xl p-6">
+
+    <h3 className="text-2xl font-bold text-cyan-400 mb-6">
+
+      📈 Weekly Scan Activity
+
+    </h3>
+
+    <ResponsiveContainer width="100%" height={300}>
+
+      <LineChart data={scanTrendData}>
+
+        <XAxis dataKey="day" stroke="#94a3b8" />
+
+        <YAxis stroke="#94a3b8" />
+
+        <Tooltip />
+
+        <Line
+          type="monotone"
+          dataKey="scans"
+          stroke="#22d3ee"
+          strokeWidth={3}
+        />
+
+      </LineChart>
+
+    </ResponsiveContainer>
+
+  </div>
+
+  {/* Suspicious Distribution */}
+  <div className="bg-slate-900/60 border border-red-500/20 rounded-2xl p-6">
+
+    <h3 className="text-2xl font-bold text-red-400 mb-6">
+
+      🚨 Product Safety Distribution
+
+    </h3>
+
+    <ResponsiveContainer width="100%" height={300}>
+
+      <PieChart>
+
+        <Pie
+          data={suspiciousData}
+          dataKey="value"
+          nameKey="name"
+          outerRadius={100}
+          label
+        >
+
+          <Cell fill="#22c55e" />
+
+          <Cell fill="#ef4444" />
+
+        </Pie>
+
+        <Tooltip />
+
+      </PieChart>
+
+    </ResponsiveContainer>
+
+  </div>
+
+</div>
       {/* Quick Analytics Cards */}
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
         {/* Total Medicines */}
