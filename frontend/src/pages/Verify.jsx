@@ -1,6 +1,7 @@
 import { useState } from "react";
 import QrScanner from "../components/QrScanner";
 import ScanMap from "../components/ScanMap";
+import jsPDF from "jspdf";
 
 function Verify() {
 
@@ -79,6 +80,55 @@ setStatus("authentic");
     setStatus("fake");
   }
 };
+// 📄 Download Verification Certificate
+const downloadCertificate = () => {
+
+  if (!result) return;
+
+  const doc = new jsPDF();
+
+  doc.setFontSize(20);
+
+  doc.text(
+    "Medicine Verification Certificate",
+    20,
+    20
+  );
+
+  doc.setFontSize(12);
+
+  doc.text(`Medicine ID: ${result.batchId}`, 20, 40);
+
+  doc.text(`Medicine Name: ${result.name}`, 20, 50);
+
+  doc.text(`Manufacturer: ${result.manufacturer}`, 20, 60);
+
+  doc.text(`Batch Number: ${result.batchNumber}`, 20, 70);
+
+  doc.text(`Dosage: ${result.dosage}`, 20, 80);
+
+  doc.text(`Expiry Date: ${result.expiryDate}`, 20, 90);
+
+  doc.text(`Current Owner: ${result.currentOwner}`, 20, 100);
+
+  doc.text(`Total Scans: ${result.scanCount}`, 20, 110);
+
+  doc.text(
+    `Verification Status: AUTHENTIC`,
+    20,
+    130
+  );
+
+  doc.text(
+    `Generated On: ${new Date().toLocaleString()}`,
+    20,
+    145
+  );
+
+  doc.save(
+    `${result.batchId}_Verification_Certificate.pdf`
+  );
+};
 
   // 🔍 Button Verify
   const handleVerifyClick = () => {
@@ -101,7 +151,7 @@ setStatus("authentic");
       handleVerify(data);
     }
   };
-  
+
 // ⏰ Expiry Check
 const isExpired =
   result?.expiryDate &&
@@ -244,6 +294,15 @@ const isExpired =
   </p>
 
 </div>
+
+<button
+  onClick={downloadCertificate}
+  className="mt-6 px-6 py-3 bg-cyan-500 hover:bg-cyan-400 text-slate-900 rounded-xl font-semibold transition"
+>
+
+  📄 Download Verification Certificate
+
+</button>
 
 {/* 🚨 Suspicious Warnings */}
 {result.suspicious && result.warnings?.length > 0 && (
