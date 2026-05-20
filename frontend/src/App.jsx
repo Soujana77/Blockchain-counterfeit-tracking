@@ -8,6 +8,7 @@ function App() {
       <Navbar />
       <ScrollToHash />   {/* 👈 ADD THIS */}
       <AppRoutes />
+  
     </div>
   );
 }

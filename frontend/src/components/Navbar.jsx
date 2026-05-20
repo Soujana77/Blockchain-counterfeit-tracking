@@ -1,72 +1,103 @@
 import { Link } from "react-router-dom";
 
-function Navbar() {
+export default function Navbar() {
+
   return (
-    <nav className="fixed top-0 left-0 w-full z-50 backdrop-blur-xl bg-slate-950/70 border-b border-white/10">
-      
-      <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
 
-        {/* Logo */}
-        <h1 className="text-3xl font-extrabold text-cyan-400 tracking-wide">
+    <nav
+      className="
+        fixed
+        top-0
+        left-0
+        w-full
+        z-50
+        bg-[#020617]/90
+        backdrop-blur-lg
+        border-b
+        border-cyan-500/10
+      "
+    >
+
+      <div
+        className="
+          max-w-7xl
+          mx-auto
+          px-6
+          py-4
+          flex
+          items-center
+          justify-between
+        "
+      >
+
+        {/* LOGO */}
+        <Link
+          to="/"
+          className="
+            text-2xl
+            font-bold
+            text-cyan-400
+          "
+        >
+
           MediChain
-        </h1>
 
-        <ul className="flex gap-8 items-center text-sm md:text-base font-medium">
+        </Link>
 
-          {/* Home */}
-          <li>
-            <Link
-              to="/#home"
-              className="text-white hover:text-cyan-400 transition duration-300"
-            >
-              Home
-            </Link>
-          </li>
+        {/* NAV LINKS */}
+        <div
+          className="
+            flex
+            items-center
+            gap-6
+            text-sm
+            md:text-base
+          "
+        >
 
-          {/* Features */}
-          <li>
-            <Link
-              to="/#features"
-              className="text-white hover:text-cyan-400 transition duration-300"
-            >
-              Features
-            </Link>
-          </li>
+          <Link
+            to="/"
+            className="hover:text-cyan-400 transition"
+          >
+            Home
+          </Link>
 
-          {/* Stats */}
-          <li>
-            <Link
-              to="/#stats"
-              className="text-white hover:text-cyan-400 transition duration-300"
-            >
-              Stats
-            </Link>
-          </li>
+          <Link
+            to="/verify"
+            className="hover:text-cyan-400 transition"
+          >
+            Verify
+          </Link>
 
-          {/* Verify */}
-          <li>
-            <Link
-              to="/verify"
-              className="px-5 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-900 font-semibold transition"
-            >
-              Verify
-            </Link>
-          </li>
+          <Link
+            to="/scanner"
+            className="hover:text-cyan-400 transition"
+          >
+            Scan QR
+          </Link>
 
-          {/* Admin */}
-          <li>
-            <Link
-              to="/admin"
-              className="px-5 py-2 rounded-xl bg-red-500 hover:bg-red-400 text-white font-semibold transition"
-            >
-              Admin
-            </Link>
-          </li>
+          <Link
+           to="/login"
+            className="
+              px-5
+              py-2
+              rounded-xl
+              bg-cyan-500
+              hover:bg-cyan-400
+              text-slate-900
+              font-semibold
+              transition
+            "
+          >
 
-        </ul>
+            Manufacturer Portal
+
+          </Link>
+
+        </div>
+
       </div>
+
     </nav>
   );
 }
-
-export default Navbar;
