@@ -1,49 +1,57 @@
 import { useState } from "react";
+
 import axios from "axios";
+
 import { QRCodeCanvas } from "qrcode.react";
+
+import {
+  Pill,
+  PlusCircle,
+  Search,
+  RefreshCcw
+} from "lucide-react";
 
 export default function Medicine() {
 
   const [id, setId] = useState("");
+
   const [name, setName] = useState("");
+
   const [manufacturer, setManufacturer] = useState("");
+
   const [batchNumber, setBatchNumber] = useState("");
-const [expiryDate, setExpiryDate] = useState("");
-const [manufacturingDate, setManufacturingDate] = useState("");
-const [dosage, setDosage] = useState("");
-const [description, setDescription] = useState("");
+
+  const [expiryDate, setExpiryDate] = useState("");
+
+  const [manufacturingDate, setManufacturingDate] = useState("");
+
+  const [dosage, setDosage] = useState("");
+
+  const [description, setDescription] = useState("");
 
   const [result, setResult] = useState(null);
 
   const [newOwner, setNewOwner] = useState("");
 
   const [showQR, setShowQR] = useState(false);
-  
 
-  // ➕ Add Medicine
+  // ➕ ADD MEDICINE
   const handleAdd = async () => {
 
     try {
 
-      if (!id || !name || !manufacturer) {
-
-        alert("Please fill all fields");
-
-        return;
-      }
-
       const res = await axios.post(
         "http://localhost:8000/api/addMedicine",
         {
-  id,
-  name,
-  manufacturer,
-  batchNumber,
-  expiryDate,
-  manufacturingDate,
-  dosage,
-  description
-}
+          id,
+          name,
+          manufacturer,
+          batchNumber,
+          expiryDate,
+          manufacturingDate,
+          dosage,
+          description
+        }
       );
 
       alert(res.data.message);
@@ -58,7 +66,7 @@ const [description, setDescription] = useState("");
     }
   };
 
-  // 🔍 Get Medicine
+  // 🔍 GET MEDICINE
   const handleGet = async () => {
 
     try {
@@ -75,17 +83,10 @@ const [description, setDescription] = useState("");
     }
   };
 
-  // 🔄 Transfer Ownership
+  // 🔄 TRANSFER OWNERSHIP
   const handleTransfer = async () => {
 
     try {
-
-      if (!id || !newOwner) {
-
-        alert("Please enter ID and owner address");
-
-        return;
-      }
 
       const res = await axios.post(
         "http://localhost:8000/api/transferOwnership",
@@ -107,201 +108,383 @@ const [description, setDescription] = useState("");
 
   return (
 
-    <div className="min-h-screen text-white px-6 pt-28 bg-[#020617]">
+    <div className="min-h-screen bg-[#020617] text-white p-10">
 
-      {/* PAGE TITLE */}
-      <h1 className="text-5xl font-bold text-center mb-12 text-cyan-400">
+      {/* HEADER */}
+      <div className="mb-10">
 
-        💊 Medicine Tracker
+        <div className="flex items-center gap-4 mb-3">
 
-      </h1>
-
-      {/* MAIN CARD */}
-      <div className="max-w-3xl mx-auto bg-slate-900/70 border border-cyan-500/20 rounded-3xl p-8 shadow-2xl">
-
-        {/* INPUTS */}
-        <div className="grid gap-5">
-
-          <input
-            type="text"
-            placeholder="Medicine ID"
-            value={id}
-            onChange={(e) => setId(e.target.value)}
-            className="w-full px-5 py-4 rounded-xl bg-slate-800 border border-white/10 outline-none focus:border-cyan-400"
+          <Pill
+            size={45}
+            className="text-cyan-400"
           />
 
-          <input
-            type="text"
-            placeholder="Medicine Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="w-full px-5 py-4 rounded-xl bg-slate-800 border border-white/10 outline-none focus:border-cyan-400"
-          />
+          <h1
+            className="
+              text-5xl
+              font-bold
+              text-cyan-400
+            "
+          >
 
-          <input
-            type="text"
-            placeholder="Manufacturer"
-            value={manufacturer}
-            onChange={(e) => setManufacturer(e.target.value)}
-            className="w-full px-5 py-4 rounded-xl bg-slate-800 border border-white/10 outline-none focus:border-cyan-400"
-          />
-          <input
-  type="text"
-  placeholder="Batch Number"
-  value={batchNumber}
-  onChange={(e) => setBatchNumber(e.target.value)}
-  className="w-full px-5 py-4 rounded-xl bg-slate-800 border border-white/10 outline-none focus:border-cyan-400"
-/>
-<input
-  type="date"
-  value={manufacturingDate}
-  onChange={(e) => setManufacturingDate(e.target.value)}
-  className="w-full px-5 py-4 rounded-xl bg-slate-800 border border-white/10 outline-none focus:border-cyan-400"
-/>
-<input
-  type="date"
-  value={expiryDate}
-  onChange={(e) => setExpiryDate(e.target.value)}
-  className="w-full px-5 py-4 rounded-xl bg-slate-800 border border-white/10 outline-none focus:border-cyan-400"
-/>
-<input
-  type="text"
-  placeholder="Dosage (e.g. 500mg)"
-  value={dosage}
-  onChange={(e) => setDosage(e.target.value)}
-  className="w-full px-5 py-4 rounded-xl bg-slate-800 border border-white/10 outline-none focus:border-cyan-400"
-/>
-<textarea
-  placeholder="Medicine Description"
-  value={description}
-  onChange={(e) => setDescription(e.target.value)}
-  className="w-full px-5 py-4 rounded-xl bg-slate-800 border border-white/10 outline-none focus:border-cyan-400"
-  rows={4}
-/>
+            Medicine Management
+
+          </h1>
 
         </div>
 
-        {/* ACTION BUTTONS */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8">
+        <p className="text-slate-400 text-lg">
 
-          <button
-            onClick={handleAdd}
-            className="py-4 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-900 font-bold transition duration-300 shadow-lg"
-          >
-            ➕ Add Medicine
-          </button>
+          Register medicines, generate QR codes,
+          and manage ownership securely.
 
-          <button
-            onClick={handleGet}
-            className="py-4 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-900 font-bold transition duration-300 shadow-lg"
-          >
-            🔍 Get Medicine
-          </button>
+        </p>
 
-        </div>
+      </div>
 
-        {/* TRANSFER OWNERSHIP */}
-        <div className="mt-10 border-t border-white/10 pt-8">
+      {/* MAIN GRID */}
+      <div
+        className="
+          grid
+          grid-cols-1
+          xl:grid-cols-3
+          gap-8
+        "
+      >
 
-          <h2 className="text-2xl font-semibold mb-5 text-yellow-400">
+        {/* LEFT SECTION */}
+        <div
+          className="
+            xl:col-span-2
+            bg-slate-900/60
+            border
+            border-cyan-500/10
+            rounded-3xl
+            p-8
+          "
+        >
 
-            🔄 Transfer Ownership
+          <h2 className="text-2xl font-bold mb-8">
+
+            Medicine Information
 
           </h2>
 
-          <input
-            type="text"
-            placeholder="New Owner Wallet Address"
-            value={newOwner}
-            onChange={(e) => setNewOwner(e.target.value)}
-            className="w-full px-5 py-4 rounded-xl bg-slate-800 border border-white/10 outline-none focus:border-yellow-400"
+          {/* FORM GRID */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+            <input
+              placeholder="Medicine ID"
+              value={id}
+              onChange={(e) =>
+                setId(e.target.value)
+              }
+              className="bg-slate-800 p-4 rounded-xl outline-none"
+            />
+
+            <input
+              placeholder="Medicine Name"
+              value={name}
+              onChange={(e) =>
+                setName(e.target.value)
+              }
+              className="bg-slate-800 p-4 rounded-xl outline-none"
+            />
+
+            <input
+              placeholder="Manufacturer"
+              value={manufacturer}
+              onChange={(e) =>
+                setManufacturer(e.target.value)
+              }
+              className="bg-slate-800 p-4 rounded-xl outline-none"
+            />
+
+            <input
+              placeholder="Batch Number"
+              value={batchNumber}
+              onChange={(e) =>
+                setBatchNumber(e.target.value)
+              }
+              className="bg-slate-800 p-4 rounded-xl outline-none"
+            />
+
+            <input
+              type="date"
+              value={manufacturingDate}
+              onChange={(e) =>
+                setManufacturingDate(
+                  e.target.value
+                )
+              }
+              className="bg-slate-800 p-4 rounded-xl outline-none"
+            />
+
+            <input
+              type="date"
+              value={expiryDate}
+              onChange={(e) =>
+                setExpiryDate(
+                  e.target.value
+                )
+              }
+              className="bg-slate-800 p-4 rounded-xl outline-none"
+            />
+
+            <input
+              placeholder="Dosage"
+              value={dosage}
+              onChange={(e) =>
+                setDosage(e.target.value)
+              }
+              className="bg-slate-800 p-4 rounded-xl outline-none"
+            />
+
+          </div>
+
+          {/* DESCRIPTION */}
+          <textarea
+            placeholder="Medicine Description"
+            value={description}
+            onChange={(e) =>
+              setDescription(e.target.value)
+            }
+            rows={5}
+            className="
+              w-full
+              mt-6
+              bg-slate-800
+              p-4
+              rounded-xl
+              outline-none
+            "
           />
 
-          <button
-            onClick={handleTransfer}
-            className="w-full mt-5 py-4 rounded-xl bg-yellow-500 hover:bg-yellow-400 text-slate-900 font-bold transition duration-300 shadow-lg"
-          >
-            🚀 Transfer Ownership
-          </button>
+          {/* BUTTONS */}
+          <div className="flex flex-wrap gap-5 mt-8">
+
+            <button
+              onClick={handleAdd}
+              className="
+                flex
+                items-center
+                gap-2
+                px-7
+                py-4
+                rounded-xl
+                bg-cyan-500
+                hover:bg-cyan-400
+                text-slate-900
+                font-semibold
+                transition
+              "
+            >
+
+              <PlusCircle size={20} />
+
+              Add Medicine
+
+            </button>
+
+            <button
+              onClick={handleGet}
+              className="
+                flex
+                items-center
+                gap-2
+                px-7
+                py-4
+                rounded-xl
+                border
+                border-cyan-400
+                hover:bg-cyan-400/10
+                font-semibold
+                transition
+              "
+            >
+
+              <Search size={20} />
+
+              Get Medicine
+
+            </button>
+
+          </div>
+
+          {/* OWNERSHIP */}
+          <div className="mt-10">
+
+            <h3 className="text-2xl font-bold mb-5">
+
+              Transfer Ownership
+
+            </h3>
+
+            <div className="flex flex-col md:flex-row gap-4">
+
+              <input
+                placeholder="New Owner Address"
+                value={newOwner}
+                onChange={(e) =>
+                  setNewOwner(e.target.value)
+                }
+                className="
+                  flex-1
+                  bg-slate-800
+                  p-4
+                  rounded-xl
+                  outline-none
+                "
+              />
+
+              <button
+                onClick={handleTransfer}
+                className="
+                  flex
+                  items-center
+                  justify-center
+                  gap-2
+                  px-6
+                  py-4
+                  rounded-xl
+                  bg-purple-500
+                  hover:bg-purple-400
+                  font-semibold
+                  transition
+                "
+              >
+
+                <RefreshCcw size={20} />
+
+                Transfer
+
+              </button>
+
+            </div>
+
+          </div>
 
         </div>
 
-        {/* QR CODE */}
-        {showQR && (
+        {/* RIGHT SECTION */}
+        <div
+          className="
+            bg-slate-900/60
+            border
+            border-cyan-500/10
+            rounded-3xl
+            p-8
+          "
+        >
 
-          <div className="mt-10 bg-white p-8 rounded-2xl text-center">
+          <h2 className="text-2xl font-bold mb-8">
 
-            <h3 className="text-2xl font-bold text-slate-900 mb-5">
+            QR Preview
 
-              📷 Medicine QR Code
+          </h2>
 
-            </h3>
+          {showQR ? (
 
-            <div className="flex justify-center">
+            <div className="text-center">
 
-              <QRCodeCanvas
-                value={id}
-                size={220}
-              />
+              <div
+                className="
+                  bg-white
+                  inline-block
+                  p-5
+                  rounded-2xl
+                "
+              >
 
-            </div>
+                <QRCodeCanvas
+                  value={id}
+                  size={220}
+                />
 
-            <p className="mt-5 text-slate-900 font-semibold">
+              </div>
 
-              Medicine ID: {id}
+              <p className="mt-5 text-slate-300">
 
-            </p>
+                Medicine ID: {id}
 
-          </div>
-        )}
-
-        {/* RESULT */}
-        {result && (
-
-          <div className="mt-10 p-6 rounded-2xl bg-emerald-900/30 border border-emerald-500">
-
-            <h3 className="text-3xl font-bold text-emerald-400 mb-5">
-
-              ✅ Medicine Details
-
-            </h3>
-
-            <div className="space-y-3 text-lg">
-
-              <p>
-                <span className="text-cyan-400 font-semibold">
-                  ID:
-                </span>{" "}
-                {result.batchId}
-              </p>
-
-              <p>
-                <span className="text-cyan-400 font-semibold">
-                  Name:
-                </span>{" "}
-                {result.name}
-              </p>
-
-              <p>
-                <span className="text-cyan-400 font-semibold">
-                  Manufacturer:
-                </span>{" "}
-                {result.manufacturer}
-              </p>
-
-              <p className="break-words">
-                <span className="text-cyan-400 font-semibold">
-                  Current Owner:
-                </span>{" "}
-                {result.currentOwner}
               </p>
 
             </div>
 
-          </div>
-        )}
+          ) : (
+
+            <div
+              className="
+                h-[300px]
+                flex
+                items-center
+                justify-center
+                text-slate-500
+                border
+                border-dashed
+                border-slate-700
+                rounded-2xl
+              "
+            >
+
+              QR Preview Appears Here
+
+            </div>
+
+          )}
+
+          {/* RESULT */}
+          {result && (
+
+            <div className="mt-10">
+
+              <h3 className="text-2xl font-bold mb-5">
+
+                Medicine Details
+
+              </h3>
+
+              <div className="space-y-4 text-slate-300">
+
+                <p>
+                  <span className="text-cyan-400">
+                    ID:
+                  </span>{" "}
+                  {result.batchId}
+                </p>
+
+                <p>
+                  <span className="text-cyan-400">
+                    Name:
+                  </span>{" "}
+                  {result.name}
+                </p>
+
+                <p>
+                  <span className="text-cyan-400">
+                    Manufacturer:
+                  </span>{" "}
+                  {result.manufacturer}
+                </p>
+
+                <p>
+                  <span className="text-cyan-400">
+                    Owner:
+                  </span>{" "}
+                  {result.currentOwner}
+                </p>
+
+              </div>
+
+            </div>
+
+          )}
+
+        </div>
 
       </div>
+
     </div>
   );
 }

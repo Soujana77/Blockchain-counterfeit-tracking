@@ -1,402 +1,401 @@
 import { useState } from "react";
-import QrScanner from "../components/QrScanner";
-import ScanMap from "../components/ScanMap";
-import jsPDF from "jspdf";
 
-function Verify() {
+import axios from "axios";
+
+import {
+  ShieldCheck,
+  Search,
+  AlertTriangle,
+  MapPinned,
+  FileCheck
+} from "lucide-react";
+
+import ScanMap from "../components/ScanMap";
+
+export default function Verify() {
 
   const [medicineId, setMedicineId] = useState("");
+
   const [result, setResult] = useState(null);
+
   const [status, setStatus] = useState("");
 
-  const [scanResult, setScanResult] = useState("");
-  const [showScanner, setShowScanner] = useState(false);
+  // VERIFY MEDICINE
+  const handleVerify = async () => {
 
-  const [history, setHistory] = useState([]);
-  const [scanLogs, setScanLogs] = useState([]);
+    try {
 
-  // 🔍 Verify Medicine
-const handleVerify = async (id) => {
+      navigator.geolocation.getCurrentPosition(
 
-  try {
+        async (position) => {
 
-    // 📍 Get Browser Location
-    navigator.geolocation.getCurrentPosition(
+          const lat = position.coords.latitude;
 
-      async (position) => {
+          const lng = position.coords.longitude;
 
-        const latitude = position.coords.latitude;
-        const longitude = position.coords.longitude;
+          const res = await axios.get(
 
-        // 🔍 Verify Medicine + Send Location
-        const res = await fetch(
-          `http://127.0.0.1:8000/api/getMedicine/${id}?lat=${latitude}&lng=${longitude}`
-        );
+            `http://localhost:8000/api/getMedicine/${medicineId}?lat=${lat}&lng=${lng}`
+          );
 
-        if (!res.ok) {
-          throw new Error("Not found");
+          setResult(res.data.data);
+
+          setStatus("authentic");
         }
+      );
 
-        const data = await res.json();
+    } catch (err) {
 
-        // 📜 Ownership History
-        const historyRes = await fetch(
-          `http://127.0.0.1:8000/api/getHistory/${id}`
-        );
+      setStatus("fake");
 
-        const historyData = await historyRes.json();
-
-// 🌍 Fetch scan logs
-const scanRes = await fetch(
-  `http://127.0.0.1:8000/api/scanHistory/${id}`
-);
-
-const scanData = await scanRes.json();
-
-setResult(data.data);
-
-setHistory(historyData.history);
-
-setScanLogs(scanData.logs);
-
-setStatus("authentic");
-      },
-
-      (error) => {
-
-        console.log(error);
-
-        alert("Location access denied");
-      }
-
-    );
-
-  } catch (error) {
-
-    setResult(null);
-
-    setHistory([]);
-
-    setStatus("fake");
-  }
-};
-// 📄 Download Verification Certificate
-const downloadCertificate = () => {
-
-  if (!result) return;
-
-  const doc = new jsPDF();
-
-  doc.setFontSize(20);
-
-  doc.text(
-    "Medicine Verification Certificate",
-    20,
-    20
-  );
-
-  doc.setFontSize(12);
-
-  doc.text(`Medicine ID: ${result.batchId}`, 20, 40);
-
-  doc.text(`Medicine Name: ${result.name}`, 20, 50);
-
-  doc.text(`Manufacturer: ${result.manufacturer}`, 20, 60);
-
-  doc.text(`Batch Number: ${result.batchNumber}`, 20, 70);
-
-  doc.text(`Dosage: ${result.dosage}`, 20, 80);
-
-  doc.text(`Expiry Date: ${result.expiryDate}`, 20, 90);
-
-  doc.text(`Current Owner: ${result.currentOwner}`, 20, 100);
-
-  doc.text(`Total Scans: ${result.scanCount}`, 20, 110);
-
-  doc.text(
-    `Verification Status: AUTHENTIC`,
-    20,
-    130
-  );
-
-  doc.text(
-    `Generated On: ${new Date().toLocaleString()}`,
-    20,
-    145
-  );
-
-  doc.save(
-    `${result.batchId}_Verification_Certificate.pdf`
-  );
-};
-
-  // 🔍 Button Verify
-  const handleVerifyClick = () => {
-
-    if (!medicineId) return;
-
-    handleVerify(medicineId);
-  };
-
-  // 📷 QR Scan
-  const handleScan = (data) => {
-
-    if (data) {
-
-      setScanResult(data);
-
-      setMedicineId(data);
-
-      // AUTO VERIFY
-      handleVerify(data);
+      alert(
+        err.response?.data?.error ||
+        "Medicine not found"
+      );
     }
   };
 
-// ⏰ Expiry Check
-const isExpired =
-  result?.expiryDate &&
-  new Date(result.expiryDate) < new Date();
-
   return (
-    <div className="min-h-screen text-white px-6 pt-28">
 
-      {/* TITLE */}
-      <h1 className="text-4xl font-bold text-center mb-10">
-        Verify Medicine
-      </h1>
+    <div className="min-h-screen bg-[#020617] text-white px-6 py-16">
 
-      {/* MAIN CARD */}
-      <div className="max-w-2xl mx-auto bg-slate-900/60 p-8 rounded-2xl border border-white/10">
+      {/* HEADER */}
+      <div className="max-w-6xl mx-auto">
 
-        {/* INPUT */}
-        <input
-          type="text"
-          placeholder="Enter Medicine ID"
-          value={medicineId}
-          onChange={(e) => setMedicineId(e.target.value)}
-          className="w-full mb-4 px-4 py-3 rounded-xl bg-slate-800 border border-white/10 outline-none"
-        />
+        <div className="text-center mb-14">
 
-        {/* VERIFY BUTTON */}
-        <button
-          onClick={handleVerifyClick}
-          className="w-full py-3 bg-cyan-500 hover:bg-cyan-400 text-slate-900 rounded-xl font-semibold"
-        >
-          Verify Medicine
-        </button>
+          <div className="flex justify-center mb-5">
 
-        
+            <ShieldCheck
+              size={70}
+              className="text-cyan-400"
+            />
 
-        {/* AUTHENTIC */}
+          </div>
 
-        {status === "authentic" && result && (
-          <div className="mt-6 p-6 bg-green-900/40 border border-green-500 rounded-xl">
+          <h1
+            className="
+              text-5xl
+              md:text-6xl
+              font-bold
+              mb-5
+            "
+          >
 
-            <h3 className="text-green-400 font-semibold text-2xl mb-4">
-              ✅ Authentic Medicine
-            </h3>
+            Medicine Verification
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          </h1>
 
-  <div className="bg-slate-800/50 p-4 rounded-xl">
-    <p className="text-cyan-400 font-semibold">
-      Medicine ID
-    </p>
-    <p>{result.batchId}</p>
-  </div>
+          <p
+            className="
+              text-slate-400
+              text-lg
+              max-w-3xl
+              mx-auto
+            "
+          >
 
-  <div className="bg-slate-800/50 p-4 rounded-xl">
-    <p className="text-cyan-400 font-semibold">
-      Medicine Name
-    </p>
-    <p>{result.name}</p>
-  </div>
+            Verify pharmaceutical authenticity
+            using blockchain validation,
+            QR intelligence, and counterfeit analysis.
 
-  <div className="bg-slate-800/50 p-4 rounded-xl">
-    <p className="text-cyan-400 font-semibold">
-      Manufacturer
-    </p>
-    <p>{result.manufacturer}</p>
-  </div>
-
-  <div className="bg-slate-800/50 p-4 rounded-xl break-words">
-    <p className="text-cyan-400 font-semibold">
-      Current Owner
-    </p>
-    <p>{result.currentOwner}</p>
-  </div>
-
-  <div className="bg-slate-800/50 p-4 rounded-xl">
-    <p className="text-cyan-400 font-semibold">
-      Batch Number
-    </p>
-    <p>{result.batchNumber}</p>
-  </div>
-
-  <div className="bg-slate-800/50 p-4 rounded-xl">
-    <p className="text-cyan-400 font-semibold">
-      Dosage
-    </p>
-    <p>{result.dosage}</p>
-  </div>
-
-  <div className="bg-slate-800/50 p-4 rounded-xl">
-    <p className="text-cyan-400 font-semibold">
-      Manufacturing Date
-    </p>
-    <p>{result.manufacturingDate}</p>
-  </div>
-
-  <div className="bg-slate-800/50 p-4 rounded-xl">
-    <p className="text-cyan-400 font-semibold">
-      Expiry Date
-    </p>
-    <p>{result.expiryDate}</p>
-  </div>
-
-  <div className="bg-slate-800/50 p-4 rounded-xl">
-    <p className="text-cyan-400 font-semibold">
-      Total Scans
-    </p>
-    <p>{result.scanCount}</p>
-  </div>
-
-</div>
-{/* ⏰ Expiry Warning */}
-{isExpired && (
-
-  <div className="mt-5 p-4 bg-red-900/40 border border-red-500 rounded-xl">
-
-    <h3 className="text-red-400 font-bold text-lg">
-
-      ⚠ Expired Medicine Detected
-
-    </h3>
-
-    <p className="text-slate-300 mt-2">
-
-      This medicine has crossed its expiry date
-      and may not be safe for consumption.
-
-    </p>
-
-  </div>
-)}
-{/* DESCRIPTION */}
-<div className="mt-5 bg-slate-800/50 p-5 rounded-xl">
-
-  <p className="text-cyan-400 font-semibold mb-2">
-    Description
-  </p>
-
-  <p className="text-slate-300 leading-relaxed">
-    {result.description}
-  </p>
-
-</div>
-
-<button
-  onClick={downloadCertificate}
-  className="mt-6 px-6 py-3 bg-cyan-500 hover:bg-cyan-400 text-slate-900 rounded-xl font-semibold transition"
->
-
-  📄 Download Verification Certificate
-
-</button>
-
-{/* 🚨 Suspicious Warnings */}
-{result.suspicious && result.warnings?.length > 0 && (
-
-  <div className="mt-6 p-4 bg-red-900/40 border border-red-500 rounded-xl">
-
-    <h3 className="text-red-400 font-bold text-lg mb-3">
-      🚨 Suspicious Activity Detected
-    </h3>
-
-    <div className="space-y-3">
-
-      {result.warnings.map((warning, index) => (
-
-        <div
-          key={index}
-          className="p-3 bg-red-950/40 rounded-lg border border-red-500/30"
-        >
-
-          <p className="text-red-300 font-semibold">
-            {warning}
           </p>
 
         </div>
 
-      ))}
+        {/* SEARCH BOX */}
+        <div
+          className="
+            bg-slate-900/60
+            border
+            border-cyan-500/10
+            rounded-3xl
+            p-8
+            max-w-3xl
+            mx-auto
+            mb-12
+          "
+        >
 
-    </div>
+          <div className="flex flex-col md:flex-row gap-4">
 
-  </div>
-)}
+            <input
+              type="text"
+              placeholder="Enter Medicine ID"
+              value={medicineId}
+              onChange={(e) =>
+                setMedicineId(e.target.value)
+              }
+              className="
+                flex-1
+                bg-slate-800
+                p-5
+                rounded-2xl
+                outline-none
+                border
+                border-transparent
+                focus:border-cyan-400
+              "
+            />
 
-{/* OWNERSHIP HISTORY */}
+            <button
+              onClick={handleVerify}
+              className="
+                flex
+                items-center
+                justify-center
+                gap-2
+                px-8
+                py-5
+                rounded-2xl
+                bg-cyan-500
+                hover:bg-cyan-400
+                text-slate-900
+                font-bold
+                transition
+              "
+            >
+
+              <Search size={22} />
+
+              Verify
+
+            </button>
+
           </div>
-        )}
 
-        {/* FAKE */}
-        {status === "fake" && (
-          <div className="mt-6 p-4 bg-red-900/40 border border-red-500 rounded-xl">
+        </div>
 
-            <h3 className="text-red-400 font-semibold text-lg">
-              ❌ Fake / Not Found
-            </h3>
+        {/* AUTHENTIC RESULT */}
+        {status === "authentic" && result && (
 
-          </div>
-        )}
-
-        {/* QR SECTION */}
-        <div className="mt-10 text-center">
-
-          <h2 className="text-xl font-semibold mb-4">
-            Scan QR Code
-          </h2>
-
-          {/* TOGGLE */}
-          <button
-            onClick={() => setShowScanner(!showScanner)}
-            className="mb-6 px-6 py-2 bg-cyan-500 hover:bg-cyan-400 text-slate-900 rounded-xl font-semibold"
+          <div
+            className="
+              bg-green-900/20
+              border
+              border-green-500/30
+              rounded-3xl
+              p-8
+              mb-10
+            "
           >
-            {showScanner ? "Stop Scanner" : "Start Scanner"}
-          </button>
 
-          {/* SCANNER */}
-          {showScanner && (
-            <div className="rounded-xl overflow-hidden border border-white/10 p-4">
+            <div className="flex items-center gap-4 mb-8">
 
-              <QrScanner onScan={handleScan} />
+              <ShieldCheck
+                size={40}
+                className="text-green-400"
+              />
 
-            </div>
-          )}
+              <h2
+                className="
+                  text-3xl
+                  font-bold
+                  text-green-400
+                "
+              >
 
-          {/* SCAN RESULT */}
-          {scanResult && (
-            <div className="mt-6 p-4 bg-slate-800 rounded-xl border border-white/10">
+                Authentic Medicine Verified
 
-              <p className="text-cyan-400 font-semibold">
-                Scanned Data:
-              </p>
-
-              <p className="text-sm mt-2 break-words">
-                {scanResult}
-              </p>
+              </h2>
 
             </div>
-          )}
 
-               {/* 🌍 MAP */}
-        {scanLogs.length > 0 && (
-          <ScanMap logs={scanLogs} />
+            {/* DETAILS GRID */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+              <div className="bg-slate-900/40 p-5 rounded-2xl">
+
+                <p className="text-slate-400 mb-2">
+                  Medicine ID
+                </p>
+
+                <h3 className="text-xl font-semibold">
+
+                  {result.batchId}
+
+                </h3>
+
+              </div>
+
+              <div className="bg-slate-900/40 p-5 rounded-2xl">
+
+                <p className="text-slate-400 mb-2">
+                  Medicine Name
+                </p>
+
+                <h3 className="text-xl font-semibold">
+
+                  {result.name}
+
+                </h3>
+
+              </div>
+
+              <div className="bg-slate-900/40 p-5 rounded-2xl">
+
+                <p className="text-slate-400 mb-2">
+                  Manufacturer
+                </p>
+
+                <h3 className="text-xl font-semibold">
+
+                  {result.manufacturer}
+
+                </h3>
+
+              </div>
+
+              <div className="bg-slate-900/40 p-5 rounded-2xl">
+
+                <p className="text-slate-400 mb-2">
+                  Total Scans
+                </p>
+
+                <h3 className="text-xl font-semibold">
+
+                  {result.scanCount}
+
+                </h3>
+
+              </div>
+
+            </div>
+
+            {/* WARNING */}
+            {result.suspicious && (
+
+              <div
+                className="
+                  mt-8
+                  bg-red-900/30
+                  border
+                  border-red-500/30
+                  rounded-2xl
+                  p-6
+                "
+              >
+
+                <div className="flex items-center gap-3">
+
+                  <AlertTriangle
+                    size={30}
+                    className="text-red-400"
+                  />
+
+                  <h3
+                    className="
+                      text-2xl
+                      font-bold
+                      text-red-400
+                    "
+                  >
+
+                    Suspicious Activity Detected
+
+                  </h3>
+
+                </div>
+
+                <p className="mt-4 text-slate-300">
+
+                  Excessive scan activity detected
+                  for this medicine.
+
+                </p>
+
+              </div>
+
+            )}
+
+          </div>
+
         )}
+
+        {/* FAKE RESULT */}
+        {status === "fake" && (
+
+          <div
+            className="
+              bg-red-900/20
+              border
+              border-red-500/30
+              rounded-3xl
+              p-8
+              text-center
+            "
+          >
+
+            <AlertTriangle
+              size={60}
+              className="
+                text-red-400
+                mx-auto
+                mb-5
+              "
+            />
+
+            <h2
+              className="
+                text-4xl
+                font-bold
+                text-red-400
+                mb-4
+              "
+            >
+
+              Counterfeit Product Detected
+
+            </h2>
+
+            <p className="text-slate-300">
+
+              This medicine could not be verified
+              on blockchain records.
+
+            </p>
+
+          </div>
+
+        )}
+
+        {/* MAP */}
+        {result && (
+
+          <div
+            className="
+              mt-10
+              bg-slate-900/60
+              border
+              border-cyan-500/10
+              rounded-3xl
+              p-8
+            "
+          >
+
+            <div className="flex items-center gap-3 mb-6">
+
+              <MapPinned
+                size={35}
+                className="text-cyan-400"
+              />
+
+              <h2 className="text-3xl font-bold">
+
+                Scan Intelligence Map
+
+              </h2>
+
+            </div>
+
+            <ScanMap />
+
+          </div>
+
+        )}
+
       </div>
-      </div>
+
     </div>
   );
 }
-
-export default Verify;
