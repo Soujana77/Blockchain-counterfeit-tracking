@@ -1,22 +1,66 @@
 import { Routes, Route } from "react-router-dom";
-import Home from "../pages/Home";
-import Verify from "../pages/Verify";
-import Medicine from "../pages/Medicine";
-import AdminDashboard from "../pages/AdminDashboard";
+
+// 🌍 Public Pages
 import LandingPage from "../pages/LandingPage";
+import Verify from "../pages/Verify";
+
 import Login from "../pages/Login";
+
+// 🔐 Admin Pages
+import AdminDashboard from "../pages/AdminDashboard";
+import Medicine from "../pages/Medicine";
+
+// 🔒 Protection
 import ProtectedRoute from "../components/ProtectedRoute";
 
-function AppRoutes() {
+// 🧭 Layout
+import AdminLayout from "../layouts/AdminLayout";
+
+export default function AppRoutes() {
+
   return (
+
     <Routes>
-      <Route path="/" element={<LandingPage />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/verify" element={<Verify />} />
-      <Route path="/add-medicine" element={<Medicine />} />
-      <Route path="/dashboard" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
+
+      {/* 🌍 PUBLIC ROUTES */}
+      <Route
+        path="/"
+        element={<LandingPage />}
+      />
+
+      <Route
+        path="/verify"
+        element={<Verify />}
+      />
+
+      <Route
+        path="/login"
+        element={<Login />}
+      />
+
+      {/* 🔐 PROTECTED ADMIN ROUTES */}
+      <Route
+        element={
+          <ProtectedRoute>
+
+            <AdminLayout />
+
+          </ProtectedRoute>
+        }
+      >
+
+        <Route
+          path="/dashboard"
+          element={<AdminDashboard />}
+        />
+
+        <Route
+          path="/medicine"
+          element={<Medicine />}
+        />
+
+      </Route>
+
     </Routes>
   );
 }
-
-export default AppRoutes;

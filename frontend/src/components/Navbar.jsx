@@ -1,4 +1,12 @@
+
 import { Link } from "react-router-dom";
+
+import {
+  ShieldCheck,
+  ScanLine,
+  LayoutDashboard,
+  Home
+} from "lucide-react";
 
 export default function Navbar() {
 
@@ -37,6 +45,7 @@ export default function Navbar() {
             text-2xl
             font-bold
             text-cyan-400
+            tracking-wide
           "
         >
 
@@ -55,29 +64,63 @@ export default function Navbar() {
           "
         >
 
+          {/* HOME */}
           <Link
             to="/"
-            className="hover:text-cyan-400 transition"
+            className="
+              hover:text-cyan-400
+              transition
+              flex
+              items-center
+              gap-2
+            "
           >
+
+            <Home size={18} />
+
             Home
+
           </Link>
 
+          {/* VERIFY */}
           <Link
             to="/verify"
-            className="hover:text-cyan-400 transition"
+            className="
+              hover:text-cyan-400
+              transition
+              flex
+              items-center
+              gap-2
+            "
           >
+
+            <ShieldCheck size={18} />
+
             Verify
+
           </Link>
 
+          {/* SCAN QR */}
           <Link
-            to="/scanner"
-            className="hover:text-cyan-400 transition"
+            to="/verify"
+            className="
+              hover:text-cyan-400
+              transition
+              flex
+              items-center
+              gap-2
+            "
           >
+
+            <ScanLine size={18} />
+
             Scan QR
+
           </Link>
 
+          {/* MANUFACTURER PORTAL */}
           <Link
-           to="/login"
+            to="/login"
             className="
               px-5
               py-2
@@ -87,8 +130,13 @@ export default function Navbar() {
               text-slate-900
               font-semibold
               transition
+              flex
+              items-center
+              gap-2
             "
           >
+
+            <LayoutDashboard size={18} />
 
             Manufacturer Portal
 

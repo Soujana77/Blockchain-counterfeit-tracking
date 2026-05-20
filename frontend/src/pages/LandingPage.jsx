@@ -1,5 +1,16 @@
 import { Link } from "react-router-dom";
 
+import {
+  ShieldCheck,
+  ScanLine,
+  Globe,
+  Siren,
+  Factory,
+  Link2,
+  Settings2,
+  Shield
+} from "lucide-react";
+
 export default function LandingPage() {
 
   return (
@@ -50,12 +61,12 @@ export default function LandingPage() {
               "
             >
 
-              🔍 Verify Medicine
+              Verify Medicine
 
             </Link>
 
             <Link
-              to="/medicine"
+              to="/login"
               className="
                 px-8
                 py-4
@@ -68,7 +79,7 @@ export default function LandingPage() {
               "
             >
 
-              🏭 Manufacturer Portal
+              Manufacturer Portal
 
             </Link>
 
@@ -83,20 +94,32 @@ export default function LandingPage() {
 
         <div className="max-w-7xl mx-auto">
 
-          <h2 className="text-4xl font-bold text-center mb-16">
+          {/* SECTION TITLE */}
+          <div className="flex items-center justify-center gap-4 mb-16">
 
-            🚀 Platform Features
+            <ShieldCheck
+              size={40}
+              className="text-cyan-400"
+            />
 
-          </h2>
+            <h2 className="text-4xl font-bold">
 
+              Platform Features
+
+            </h2>
+
+          </div>
+
+          {/* FEATURE GRID */}
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
 
             {/* FEATURE 1 */}
             <div className="bg-slate-900/60 border border-cyan-500/20 rounded-2xl p-6">
 
-              <div className="text-5xl mb-5">
-                ⛓
-              </div>
+              <Shield
+                size={48}
+                className="text-cyan-400 mb-5"
+              />
 
               <h3 className="text-2xl font-bold text-cyan-400 mb-4">
 
@@ -116,9 +139,10 @@ export default function LandingPage() {
             {/* FEATURE 2 */}
             <div className="bg-slate-900/60 border border-cyan-500/20 rounded-2xl p-6">
 
-              <div className="text-5xl mb-5">
-                📷
-              </div>
+              <ScanLine
+                size={48}
+                className="text-cyan-400 mb-5"
+              />
 
               <h3 className="text-2xl font-bold text-cyan-400 mb-4">
 
@@ -138,9 +162,10 @@ export default function LandingPage() {
             {/* FEATURE 3 */}
             <div className="bg-slate-900/60 border border-cyan-500/20 rounded-2xl p-6">
 
-              <div className="text-5xl mb-5">
-                🌍
-              </div>
+              <Globe
+                size={48}
+                className="text-cyan-400 mb-5"
+              />
 
               <h3 className="text-2xl font-bold text-cyan-400 mb-4">
 
@@ -160,9 +185,10 @@ export default function LandingPage() {
             {/* FEATURE 4 */}
             <div className="bg-slate-900/60 border border-cyan-500/20 rounded-2xl p-6">
 
-              <div className="text-5xl mb-5">
-                🚨
-              </div>
+              <Siren
+                size={48}
+                className="text-cyan-400 mb-5"
+              />
 
               <h3 className="text-2xl font-bold text-cyan-400 mb-4">
 
@@ -190,19 +216,32 @@ export default function LandingPage() {
 
         <div className="max-w-6xl mx-auto">
 
-          <h2 className="text-4xl font-bold text-center mb-16">
+          {/* SECTION TITLE */}
+          <div className="flex items-center justify-center gap-4 mb-16">
 
-            ⚙ How The System Works
+            <Settings2
+              size={40}
+              className="text-cyan-400"
+            />
 
-          </h2>
+            <h2 className="text-4xl font-bold">
 
+              How The System Works
+
+            </h2>
+
+          </div>
+
+          {/* WORKFLOW */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
 
+            {/* STEP 1 */}
             <div>
 
-              <div className="text-6xl mb-5">
-                🏭
-              </div>
+              <Factory
+                size={52}
+                className="text-cyan-400 mx-auto mb-5"
+              />
 
               <h3 className="text-2xl font-bold mb-3">
 
@@ -218,11 +257,13 @@ export default function LandingPage() {
 
             </div>
 
+            {/* STEP 2 */}
             <div>
 
-              <div className="text-6xl mb-5">
-                🔗
-              </div>
+              <Link2
+                size={52}
+                className="text-cyan-400 mx-auto mb-5"
+              />
 
               <h3 className="text-2xl font-bold mb-3">
 
@@ -238,11 +279,13 @@ export default function LandingPage() {
 
             </div>
 
+            {/* STEP 3 */}
             <div>
 
-              <div className="text-6xl mb-5">
-                📷
-              </div>
+              <ScanLine
+                size={52}
+                className="text-cyan-400 mx-auto mb-5"
+              />
 
               <h3 className="text-2xl font-bold mb-3">
 
@@ -258,11 +301,13 @@ export default function LandingPage() {
 
             </div>
 
+            {/* STEP 4 */}
             <div>
 
-              <div className="text-6xl mb-5">
-                🚨
-              </div>
+              <Siren
+                size={52}
+                className="text-cyan-400 mx-auto mb-5"
+              />
 
               <h3 className="text-2xl font-bold mb-3">
 
