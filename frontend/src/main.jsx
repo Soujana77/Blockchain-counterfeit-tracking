@@ -7,6 +7,9 @@ import { BrowserRouter } from "react-router-dom";
 import App from "./App";
 
 import "./styles/global.css";
+import "leaflet/dist/leaflet.css";
+import "leaflet-defaulticon-compatibility";
+import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
 
 ReactDOM.createRoot(
   document.getElementById("root")
