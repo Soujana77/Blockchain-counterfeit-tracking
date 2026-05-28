@@ -9,7 +9,8 @@ import {
   AlertTriangle,
   MapPinned,
   FileCheck,
-  QrCode
+QrCode,
+ArrowDown
 } from "lucide-react";
 
 import ScanMap from "../components/ScanMap";
@@ -89,7 +90,136 @@ const downloadReport = () => {
     20,
     130
   );
+{/* SUPPLY CHAIN TIMELINE */}
+<div
+  className="
+    mt-10
+    bg-slate-900/40
+    rounded-2xl
+    p-6
+  "
+>
 
+  <div className="flex items-center gap-3 mb-8">
+
+    <ShieldCheck
+      size={30}
+      className="text-cyan-400"
+    />
+
+    <h2 className="text-2xl font-bold">
+
+      Supply Chain Timeline
+
+    </h2>
+
+  </div>
+
+  <div className="flex flex-col items-center">
+
+    {/* MANUFACTURER */}
+    <div
+      className="
+        w-full
+        bg-cyan-500/10
+        border
+        border-cyan-400/20
+        rounded-2xl
+        p-5
+      "
+    >
+
+      <p className="text-cyan-400 text-sm mb-2">
+
+        Manufacturer
+
+      </p>
+
+      <h3 className="font-semibold text-lg">
+
+        {result.manufacturer}
+
+      </h3>
+
+    </div>
+
+    {/* TIMELINE */}
+    {history.length > 0 && history.map((owner, index) => (
+
+      <div
+        key={index}
+        className="w-full flex flex-col items-center"
+      >
+
+        {/* ARROW */}
+        <ArrowDown
+          size={28}
+          className="text-cyan-400 my-3"
+        />
+
+        {/* OWNER CARD */}
+        <div
+          className="
+            w-full
+            bg-slate-800
+            border
+            border-slate-700
+            rounded-2xl
+            p-5
+          "
+        >
+
+          <p className="text-slate-400 text-sm mb-2">
+
+            Ownership Transfer #{index + 1}
+
+          </p>
+
+          <h3 className="font-semibold break-all">
+
+            {owner}
+
+          </h3>
+
+        </div>
+
+      </div>
+    ))}
+
+    {/* CUSTOMER */}
+    <ArrowDown
+      size={28}
+      className="text-green-400 my-3"
+    />
+
+    <div
+      className="
+        w-full
+        bg-green-500/10
+        border
+        border-green-400/20
+        rounded-2xl
+        p-5
+      "
+    >
+
+      <p className="text-green-400 text-sm mb-2">
+
+        Verified By Customer
+
+      </p>
+
+      <h3 className="font-semibold">
+
+        Blockchain Verification Successful
+
+      </h3>
+
+    </div>
+
+  </div>
+
+</div>
   // Ownership history
   doc.text(
     "Ownership History:",

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import {useEffect,useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 
@@ -7,7 +7,18 @@ const TransferOwnership = () => {
   const [id, setId] = useState("");
   const [newOwner, setNewOwner] = useState("");
   const [loading, setLoading] = useState(false);
+const [wallet, setWallet] = useState("");
+useEffect(() => {
 
+  const savedWallet =
+    localStorage.getItem("walletAddress");
+
+  if (savedWallet) {
+
+    setWallet(savedWallet);
+  }
+
+}, []);
   const handleTransfer = async (e) => {
 
     e.preventDefault();
@@ -53,7 +64,27 @@ const TransferOwnership = () => {
         <h1 className="text-3xl font-bold mb-6 text-center">
           Transfer Ownership
         </h1>
+{
+  wallet && (
 
+    <div
+      className="
+        mb-6
+        p-3
+        rounded-xl
+        bg-cyan-500/10
+        border
+        border-cyan-400/20
+        text-sm
+        break-all
+      "
+    >
+
+      Connected Wallet: {wallet}
+
+    </div>
+  )
+}
         <form
           onSubmit={handleTransfer}
           className="space-y-5"

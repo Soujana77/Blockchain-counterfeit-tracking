@@ -23,7 +23,8 @@
     "react-hot-toast": "^2.6.0",
     "react-leaflet": "^4.2.1",
     "react-router-dom": "^6.30.3",
-    "recharts": "^3.8.1"
+    "recharts": "^3.8.1",
+    "web3": "^4.16.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

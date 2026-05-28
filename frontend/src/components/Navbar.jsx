@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
 
+import { useEffect, useState } from "react";
+
 import {
   ShieldCheck,
   LayoutDashboard,
@@ -7,6 +9,63 @@ import {
 } from "lucide-react";
 
 export default function Navbar() {
+
+  const [wallet, setWallet] = useState("");
+
+  const [connecting, setConnecting] = useState(false);
+
+  useEffect(() => {
+
+    const savedWallet =
+      localStorage.getItem("walletAddress");
+
+    if (savedWallet) {
+
+      setWallet(savedWallet);
+    }
+
+  }, []);
+
+  const connectWallet = async () => {
+
+    try {
+
+      if (!window.ethereum) {
+
+        alert("Install MetaMask");
+
+        return;
+      }
+
+      setConnecting(true);
+
+      const accounts =
+        await window.ethereum.request({
+          method: "eth_requestAccounts",
+        });
+
+      const walletAddress = accounts[0];
+
+      setWallet(walletAddress);
+
+      localStorage.setItem(
+        "walletAddress",
+        walletAddress
+      );
+
+      setConnecting(false);
+
+    } catch (err) {
+
+      console.log("METAMASK ERROR:", err);
+
+      alert(
+        err.message || "Wallet connection failed"
+      );
+
+      setConnecting(false);
+    }
+  };
 
   return (
 
@@ -50,7 +109,7 @@ export default function Navbar() {
 
         </Link>
 
-        {/* LINKS */}
+        {/* NAV LINKS */}
         <div
           className="
             flex
@@ -60,6 +119,7 @@ export default function Navbar() {
           "
         >
 
+          {/* HOME */}
           <Link
             to="/"
             className="
@@ -77,6 +137,7 @@ export default function Navbar() {
 
           </Link>
 
+          {/* VERIFY */}
           <Link
             to="/verify"
             className="
@@ -94,8 +155,15 @@ export default function Navbar() {
 
           </Link>
 
-          <Link
-            to="/login"
+          {/* CONNECT WALLET */}
+          <button
+            onClick={() => {
+
+              if (!wallet) {
+
+                connectWallet();
+              }
+            }}
             className="
               px-5
               py-2
@@ -113,9 +181,14 @@ export default function Navbar() {
 
             <LayoutDashboard size={18} />
 
-            Admin Portal
-
-          </Link>
+           {
+  connecting
+    ? "Connecting..."
+    : wallet
+      ? `Wallet Connected`
+      : "Connect Wallet"
+}
+          </button>
 
         </div>
 
