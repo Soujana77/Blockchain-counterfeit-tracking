@@ -34,6 +34,31 @@ export default function Medicine() {
   const [newOwner, setNewOwner] = useState("");
 
   const [showQR, setShowQR] = useState(false);
+  // ⬇️ DOWNLOAD QR
+const downloadQR = () => {
+
+  const canvas =
+    document.getElementById("medicineQR");
+
+  const pngUrl =
+    canvas
+      .toDataURL("image/png")
+      .replace("image/png", "image/octet-stream");
+
+  const downloadLink =
+    document.createElement("a");
+
+  downloadLink.href = pngUrl;
+
+  downloadLink.download =
+    `${id}_QR.png`;
+
+  document.body.appendChild(downloadLink);
+
+  downloadLink.click();
+
+  document.body.removeChild(downloadLink);
+};
 
   // ➕ ADD MEDICINE
   const handleAdd = async () => {
@@ -398,9 +423,10 @@ export default function Medicine() {
               >
 
                 <QRCodeCanvas
-                  value={id}
-                  size={220}
-                />
+  id="medicineQR"
+  value={id}
+  size={220}
+/>
 
               </div>
 
@@ -409,6 +435,25 @@ export default function Medicine() {
                 Medicine ID: {id}
 
               </p>
+
+              <button
+  onClick={downloadQR}
+  className="
+    mt-5
+    px-5
+    py-3
+    bg-cyan-500
+    hover:bg-cyan-400
+    rounded-xl
+    text-slate-900
+    font-semibold
+    transition
+  "
+>
+
+  Download QR
+
+</button>
 
             </div>
 

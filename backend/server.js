@@ -32,7 +32,7 @@ mongoose.connect(
 // ==============================
 // 📌 Contract Details
 // ==============================
-const contractAddress = "0x3b6E50DbAD329E4744e375569bC69865083a6f64";
+const contractAddress = "0x00A210C0b23FdCb251Ce50d4C783d1Aaa14204b1";
 
 const abi = 
   [
@@ -170,7 +170,6 @@ const abi =
     "type": "function"
   }
 ]
-  
 // ==============================
 // 📜 Scan Log Schema
 // ==============================
@@ -467,17 +466,53 @@ app.get("/api/scanHistory/:id", async (req, res) => {
 
 // Transfer Ownership
 app.post("/api/transferOwnership", async (req, res) => {
+
   try {
+
     const { id, newOwner } = req.body;
 
-    await contract.methods.transferOwnership(id, newOwner).send({
-      from: account,
-      gas: 3000000
+    // ✅ Validate wallet address
+    if (!web3.utils.isAddress(newOwner)) {
+
+      return res.status(400).json({
+        error: "Invalid wallet address"
+      });
+    }
+
+    // ✅ Check medicine exists first
+    const medicine = await contract.methods
+      .verifyMedicine(id)
+      .call();
+
+    if (!medicine) {
+
+      return res.status(404).json({
+        error: "Medicine not found"
+      });
+    }
+
+    // ✅ Execute ownership transfer
+    await contract.methods
+      .transferOwnership(id, newOwner)
+      .send({
+        from: account,
+        gas: 3000000
+      });
+
+    res.json({
+      message: "Ownership transferred successfully 🔄"
     });
 
-    res.json({ message: "Ownership transferred successfully 🔄" });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+
+    console.log("TRANSFER ERROR ❌", error);
+
+    res.status(500).json({
+      error:
+        error?.cause?.errorArgs?.message ||
+        error.message ||
+        "Ownership transfer failed"
+    });
   }
 });
 

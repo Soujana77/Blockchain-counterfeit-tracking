@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 import axios from "axios";
+import jsPDF from "jspdf";
 
 import {
   ShieldCheck,
@@ -26,7 +27,93 @@ export default function Verify() {
   const [history, setHistory] = useState([]);
 
   const [showScanner, setShowScanner] = useState(false);
+// 📄 DOWNLOAD REPORT
+const downloadReport = () => {
 
+  if (!result) return;
+
+  const doc = new jsPDF();
+
+  doc.setFontSize(22);
+
+  doc.text(
+    "Medicine Verification Report",
+    20,
+    20
+  );
+
+  doc.setFontSize(14);
+
+  doc.text(
+    `Medicine ID: ${result.batchId}`,
+    20,
+    40
+  );
+
+  doc.text(
+    `Medicine Name: ${result.name}`,
+    20,
+    55
+  );
+
+  doc.text(
+    `Manufacturer: ${result.manufacturer}`,
+    20,
+    70
+  );
+
+  doc.text(
+    `Current Owner: ${result.currentOwner}`,
+    20,
+    85
+  );
+
+  doc.text(
+    `Total Scans: ${result.scanCount}`,
+    20,
+    100
+  );
+
+  doc.text(
+    `Verification Status: Authentic`,
+    20,
+    115
+  );
+
+  doc.text(
+    `Suspicious Activity: ${
+      result.suspicious
+        ? "YES"
+        : "NO"
+    }`,
+    20,
+    130
+  );
+
+  // Ownership history
+  doc.text(
+    "Ownership History:",
+    20,
+    150
+  );
+
+  let y = 165;
+
+  history.forEach((owner, index) => {
+
+    doc.text(
+      `${index + 1}. ${owner}`,
+      25,
+      y
+    );
+
+    y += 12;
+  });
+
+  doc.save(
+    `${result.batchId}_Verification_Report.pdf`
+  );
+};
   // ==============================
   // VERIFY MEDICINE
   // ==============================
@@ -288,7 +375,24 @@ export default function Verify() {
                 Authentic Medicine Verified
 
               </h2>
+<button
+  onClick={downloadReport}
+  className="
+    mt-5
+    px-5
+    py-3
+    bg-cyan-500
+    hover:bg-cyan-400
+    rounded-xl
+    text-slate-900
+    font-semibold
+    transition
+  "
+>
 
+  Download Verification Report
+
+</button>
             </div>
 
             {/* DETAILS GRID */}

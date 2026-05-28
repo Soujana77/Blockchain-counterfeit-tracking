@@ -53,10 +53,11 @@ contract Medicine {
             "Medicine not found"
         );
 
-        require(
-            medicines[_id].currentOwner == msg.sender,
-            "Only current owner can transfer"
-        );
+        // Admin-controlled transfer
+require(
+    medicines[_id].exists,
+    "Medicine not found"
+);
 
         medicines[_id].currentOwner = _newOwner;
 
