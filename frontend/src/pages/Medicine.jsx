@@ -92,22 +92,45 @@ const downloadQR = () => {
   };
 
   // 🔍 GET MEDICINE
-  const handleGet = async () => {
+const handleGet = async () => {
 
-    try {
+  try {
 
-      const res = await axios.get(
-        `http://localhost:8000/api/getMedicine/${id}`
-      );
+    navigator.geolocation.getCurrentPosition(
 
-      setResult(res.data.data);
+      async (position) => {
 
-    } catch {
+        try {
 
-      alert("Medicine not found");
-    }
-  };
+          const lat = position.coords.latitude;
 
+          const lng = position.coords.longitude;
+
+          const res = await axios.get(
+            `http://localhost:8000/api/getMedicine/${id}?lat=${lat}&lng=${lng}`
+          );
+
+          setResult(res.data.data);
+
+        } catch (err) {
+
+          console.log(err);
+
+          alert(
+            err.response?.data?.error ||
+            "Medicine not found"
+          );
+        }
+      }
+    );
+
+  } catch (err) {
+
+    console.log(err);
+
+    alert("Unable to fetch medicine");
+  }
+};
   // 🔄 TRANSFER OWNERSHIP
   const handleTransfer = async () => {
 

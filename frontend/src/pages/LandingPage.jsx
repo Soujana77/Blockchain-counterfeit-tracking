@@ -18,11 +18,10 @@ export default function LandingPage() {
     <div className="min-h-screen bg-[#020617] text-white overflow-hidden">
 
       {/* HERO SECTION */}
-      <section className="relative px-6 py-28 text-center">
-
+      <section className="relative px-6 pt-20 pb-6 text-center">
         <div className="max-w-5xl mx-auto">
 
-          <h1 className="text-5xl md:text-7xl font-bold leading-tight">
+          <h1 className="text-4xl md:text-6xl font-bold leading-tight">
 
             Blockchain-Based
 
@@ -36,7 +35,7 @@ export default function LandingPage() {
 
           </h1>
 
-          <p className="mt-8 text-slate-300 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
+          <p className="mt-6 text-slate-300 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
 
             Secure pharmaceutical supply chains using
             blockchain verification, QR intelligence,
@@ -44,8 +43,8 @@ export default function LandingPage() {
 
           </p>
 
-          {/* BUTTONS */}
-          <div className="mt-12 flex flex-wrap justify-center gap-5">
+          {/* BUTTONS */}<div className="mt-8 flex flex-wrap justify-center gap-4">
+          
 
             <Link
               to="/verify"
@@ -90,7 +89,7 @@ export default function LandingPage() {
       </section>
 
       {/* FEATURES */}
-      <section className="px-6 py-20">
+      <section className="px-6 py-10">
 
         <div className="max-w-7xl mx-auto">
 
