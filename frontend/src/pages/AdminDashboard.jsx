@@ -343,7 +343,7 @@ const liveAlerts = [
       <div className="max-w-7xl mx-auto mt-12">
         <div className="flex flex-wrap gap-4 justify-center">
           <Link
-            to="/add-medicine"
+            to="/medicine"
             className="px-6 py-3 bg-cyan-500 hover:bg-cyan-400 text-slate-900 rounded-xl font-semibold transition"
           >
             ➕ Add Medicine

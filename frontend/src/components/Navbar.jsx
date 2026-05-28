@@ -1,9 +1,7 @@
-
 import { Link } from "react-router-dom";
 
 import {
   ShieldCheck,
-  ScanLine,
   LayoutDashboard,
   Home
 } from "lucide-react";
@@ -19,10 +17,10 @@ export default function Navbar() {
         left-0
         w-full
         z-50
-        bg-[#020617]/90
-        backdrop-blur-lg
+        bg-[#020617]
         border-b
         border-cyan-500/10
+        shadow-lg
       "
     >
 
@@ -45,7 +43,6 @@ export default function Navbar() {
             text-2xl
             font-bold
             text-cyan-400
-            tracking-wide
           "
         >
 
@@ -53,18 +50,16 @@ export default function Navbar() {
 
         </Link>
 
-        {/* NAV LINKS */}
+        {/* LINKS */}
         <div
           className="
             flex
             items-center
             gap-6
-            text-sm
-            md:text-base
+            text-white
           "
         >
 
-          {/* HOME */}
           <Link
             to="/"
             className="
@@ -82,7 +77,6 @@ export default function Navbar() {
 
           </Link>
 
-          {/* VERIFY */}
           <Link
             to="/verify"
             className="
@@ -96,29 +90,10 @@ export default function Navbar() {
 
             <ShieldCheck size={18} />
 
-            Verify
+            Verify Medicine
 
           </Link>
 
-          {/* SCAN QR */}
-          <Link
-            to="/verify"
-            className="
-              hover:text-cyan-400
-              transition
-              flex
-              items-center
-              gap-2
-            "
-          >
-
-            <ScanLine size={18} />
-
-            Scan QR
-
-          </Link>
-
-          {/* MANUFACTURER PORTAL */}
           <Link
             to="/login"
             className="
@@ -138,7 +113,7 @@ export default function Navbar() {
 
             <LayoutDashboard size={18} />
 
-            Manufacturer Portal
+            Admin Portal
 
           </Link>
 

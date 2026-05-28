@@ -10,7 +10,7 @@ export default function App() {
 
   const location = useLocation();
 
-  // 🔐 Admin Pages
+  // ✅ Admin Pages
   const adminRoutes = [
 
     "/dashboard",
@@ -18,15 +18,18 @@ export default function App() {
     "/transfer"
   ];
 
+  // ✅ Hide Public Navbar On Admin Pages
   const isAdminPage =
 
-    adminRoutes.includes(location.pathname);
+    adminRoutes.some((route) =>
+      location.pathname.startsWith(route)
+    );
 
   return (
 
-    <div>
+    <div className="bg-[#020617] min-h-screen text-white">
 
-      {/* ✅ Global Toast Notifications */}
+      {/* GLOBAL TOAST */}
       <Toaster
         position="top-right"
         toastOptions={{
@@ -38,9 +41,10 @@ export default function App() {
         }}
       />
 
-      {/* 🌍 Show Navbar Only On Public Pages */}
+      {/* PUBLIC NAVBAR */}
       {!isAdminPage && <Navbar />}
 
+      {/* ROUTES */}
       <AppRoutes />
 
     </div>
