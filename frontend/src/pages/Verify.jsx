@@ -20,6 +20,8 @@ export default function Verify() {
 
   const [status, setStatus] = useState("");
 
+  const [history, setHistory] = useState([]);
+
   // VERIFY MEDICINE
   const handleVerify = async () => {
 
@@ -29,22 +31,45 @@ export default function Verify() {
 
         async (position) => {
 
-          const lat = position.coords.latitude;
+          try {
 
-          const lng = position.coords.longitude;
+            const lat = position.coords.latitude;
 
-          const res = await axios.get(
+            const lng = position.coords.longitude;
 
-            `http://localhost:8000/api/getMedicine/${medicineId}?lat=${lat}&lng=${lng}`
-          );
+            // ✅ Verify medicine
+            const res = await axios.get(
+              `http://localhost:8000/api/getMedicine/${medicineId}?lat=${lat}&lng=${lng}`
+            );
 
-          setResult(res.data.data);
+            setResult(res.data.data);
 
-          setStatus("authentic");
+            // ✅ Fetch ownership history
+            const historyRes = await axios.get(
+              `http://localhost:8000/api/getHistory/${medicineId}`
+            );
+
+            setHistory(historyRes.data.history);
+
+            setStatus("authentic");
+
+          } catch (err) {
+
+            console.log(err);
+
+            setStatus("fake");
+
+            alert(
+              err.response?.data?.error ||
+              "Medicine not found"
+            );
+          }
         }
       );
 
     } catch (err) {
+
+      console.log(err);
 
       setStatus("fake");
 
@@ -245,7 +270,6 @@ export default function Verify() {
                 </h3>
 
               </div>
-              
 
               <div className="bg-slate-900/40 p-5 rounded-2xl">
 
@@ -258,6 +282,92 @@ export default function Verify() {
                   {result.scanCount}
 
                 </h3>
+
+              </div>
+
+              {/* CURRENT OWNER */}
+              <div className="bg-slate-900/40 p-5 rounded-2xl md:col-span-2">
+
+                <p className="text-slate-400 mb-2">
+                  Current Owner
+                </p>
+
+                <h3 className="text-lg font-semibold break-all">
+
+                  {result.currentOwner}
+
+                </h3>
+
+              </div>
+
+            </div>
+
+            {/* OWNERSHIP HISTORY */}
+            <div
+              className="
+                mt-10
+                bg-slate-900/40
+                rounded-2xl
+                p-6
+              "
+            >
+
+              <div className="flex items-center gap-3 mb-6">
+
+                <FileCheck
+                  size={30}
+                  className="text-cyan-400"
+                />
+
+                <h2 className="text-2xl font-bold">
+
+                  Ownership History
+
+                </h2>
+
+              </div>
+
+              <div className="space-y-4">
+
+                {history.length > 0 ? (
+
+                  history.map((owner, index) => (
+
+                    <div
+                      key={index}
+                      className="
+                        bg-slate-800
+                        p-4
+                        rounded-xl
+                        border
+                        border-slate-700
+                      "
+                    >
+
+                      <p className="text-slate-400 text-sm mb-2">
+
+                        Owner #{index + 1}
+
+                      </p>
+
+                      <p className="break-all font-semibold">
+
+                        {owner}
+
+                      </p>
+
+                    </div>
+                  ))
+
+                ) : (
+
+                  <p className="text-slate-400">
+
+                    No ownership history found.
+
+                  </p>
+
+                )}
 
               </div>
 
