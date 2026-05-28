@@ -7,10 +7,13 @@ import {
   Search,
   AlertTriangle,
   MapPinned,
-  FileCheck
+  FileCheck,
+  QrCode
 } from "lucide-react";
 
 import ScanMap from "../components/ScanMap";
+
+import QrScanner from "../components/QrScanner";
 
 export default function Verify() {
 
@@ -22,8 +25,12 @@ export default function Verify() {
 
   const [history, setHistory] = useState([]);
 
+  const [showScanner, setShowScanner] = useState(false);
+
+  // ==============================
   // VERIFY MEDICINE
-  const handleVerify = async () => {
+  // ==============================
+  const verifyMedicine = async (idToVerify) => {
 
     try {
 
@@ -39,14 +46,14 @@ export default function Verify() {
 
             // ✅ Verify medicine
             const res = await axios.get(
-              `http://localhost:8000/api/getMedicine/${medicineId}?lat=${lat}&lng=${lng}`
+              `http://localhost:8000/api/getMedicine/${idToVerify}?lat=${lat}&lng=${lng}`
             );
 
             setResult(res.data.data);
 
             // ✅ Fetch ownership history
             const historyRes = await axios.get(
-              `http://localhost:8000/api/getHistory/${medicineId}`
+              `http://localhost:8000/api/getHistory/${idToVerify}`
             );
 
             setHistory(historyRes.data.history);
@@ -78,6 +85,26 @@ export default function Verify() {
         "Medicine not found"
       );
     }
+  };
+
+  // ==============================
+  // MANUAL VERIFY
+  // ==============================
+  const handleVerify = () => {
+
+    verifyMedicine(medicineId);
+  };
+
+  // ==============================
+  // QR SCAN
+  // ==============================
+  const handleScan = async (decodedText) => {
+
+    setMedicineId(decodedText);
+
+    setShowScanner(false);
+
+    verifyMedicine(decodedText);
   };
 
   return (
@@ -187,7 +214,45 @@ export default function Verify() {
 
             </button>
 
+            {/* QR BUTTON */}
+            <button
+              onClick={() =>
+                setShowScanner(!showScanner)
+              }
+              className="
+                flex
+                items-center
+                justify-center
+                gap-2
+                px-6
+                py-5
+                rounded-2xl
+                bg-purple-500
+                hover:bg-purple-400
+                text-white
+                font-bold
+                transition
+              "
+            >
+
+              <QrCode size={22} />
+
+              Scan QR
+
+            </button>
+
           </div>
+
+          {/* QR SCANNER */}
+          {showScanner && (
+
+            <div className="mt-8">
+
+              <QrScanner onScan={handleScan} />
+
+            </div>
+
+          )}
 
         </div>
 
