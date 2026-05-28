@@ -13,7 +13,8 @@ import {
 import { ArrowRightLeft } from "lucide-react";
 
 export default function AdminLayout() {
-
+const role =
+  localStorage.getItem("userRole");
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -53,86 +54,129 @@ export default function AdminLayout() {
             "
           >
 
-            MediChain
+          MediChain {role && `• ${role}`}
 
           </h1>
 
           {/* NAVIGATION */}
-          <nav className="space-y-4">
+   <nav className="space-y-4">
 
-            {/* DASHBOARD */}
-            <Link
-              to="/dashboard"
-              className="
-                flex
-                items-center
-                gap-3
-                px-5
-                py-3
-                rounded-xl
-                hover:bg-cyan-500/10
-                transition
-              "
-            >
+  {/* DASHBOARD */}
+  <Link
+    to="/dashboard"
+    className="
+      flex
+      items-center
+      gap-3
+      px-5
+      py-3
+      rounded-xl
+      hover:bg-cyan-500/10
+      transition
+    "
+  >
 
-              <LayoutDashboard size={20} />
+    <LayoutDashboard size={20} />
 
-              Dashboard
+    Dashboard
 
-            </Link>
+  </Link>
 
-            {/* MEDICINE MANAGEMENT */}
-            <Link
-              to="/medicine"
-              className="
-                flex
-                items-center
-                gap-3
-                px-5
-                py-3
-                rounded-xl
-                hover:bg-cyan-500/10
-                transition
-              "
-            >
-             
+  {/* MANUFACTURER */}
+  {role === "manufacturer" && (
 
-              <Pill size={20} />
+    <Link
+      to="/medicine"
+      className="
+        flex
+        items-center
+        gap-3
+        px-5
+        py-3
+        rounded-xl
+        hover:bg-cyan-500/10
+        transition
+      "
+    >
 
-              Medicine Management
+      <Pill size={20} />
 
-            </Link>
+      Medicine Management
 
-            {/* VERIFY */}
-            <Link
-              to="/verify"
-              className="
-                flex
-                items-center
-                gap-3
-                px-5
-                py-3
-                rounded-xl
-                hover:bg-cyan-500/10
-                transition
-              "
-            >
-               
+    </Link>
+  )}
 
-              <ShieldCheck size={20} />
+  {/* DISTRIBUTOR / WHOLESALER */}
+  {(role === "distributor" ||
+    role === "wholesaler") && (
 
-              Verify Medicine
+    <Link
+      to="/transfer"
+      className="
+        flex
+        items-center
+        gap-3
+        px-5
+        py-3
+        rounded-xl
+        hover:bg-cyan-500/10
+        transition
+      "
+    >
 
-            </Link>
-            <Link
-  to="/transfer"
-  className="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-800"
->
-  <ArrowRightLeft size={18} />
-  Transfer Ownership
-</Link>
+      <ArrowRightLeft size={20} />
 
-          </nav>
+      Transfer Ownership
+
+    </Link>
+  )}
+
+  {/* PHARMACY */}
+  {role === "pharmacy" && (
+
+    <Link
+      to="/verify"
+      className="
+        flex
+        items-center
+        gap-3
+        px-5
+        py-3
+        rounded-xl
+        hover:bg-cyan-500/10
+        transition
+      "
+    >
+
+      <ShieldCheck size={20} />
+
+      Verify Medicine
+
+    </Link>
+  )}
+
+  {/* COMMON */}
+  <Link
+    to="/verify"
+    className="
+      flex
+      items-center
+      gap-3
+      px-5
+      py-3
+      rounded-xl
+      hover:bg-cyan-500/10
+      transition
+    "
+  >
+
+    <ShieldCheck size={20} />
+
+    Customer Verification
+
+  </Link>
+
+</nav>
 
         </div>
 

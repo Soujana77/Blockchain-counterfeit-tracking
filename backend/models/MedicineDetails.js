@@ -14,7 +14,13 @@ const medicineDetailsSchema = new mongoose.Schema({
 
   dosage: String,
 
-  description: String
+  description: String,
+
+  // 💊 Pharmacy Sale Status
+  sold: {
+    type: Boolean,
+    default: false
+  }
 
 });
 

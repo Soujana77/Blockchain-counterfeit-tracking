@@ -1,4 +1,5 @@
 import { useState } from "react";
+
 import { useNavigate } from "react-router-dom";
 
 export default function Login() {
@@ -9,14 +10,16 @@ export default function Login() {
 
   const [password, setPassword] = useState("");
 
+  const [role, setRole] = useState("manufacturer");
+
   const handleLogin = (e) => {
 
     e.preventDefault();
 
-    // ✅ Simple Manufacturer Login
+    // ✅ Simple Demo Authentication
     if (
-      email === "admin@medichain.com" &&
-      password === "admin123"
+      email &&
+      password
     ) {
 
       localStorage.setItem(
@@ -24,11 +27,16 @@ export default function Login() {
         "true"
       );
 
+      localStorage.setItem(
+        "userRole",
+        role
+      );
+
       navigate("/dashboard");
 
     } else {
 
-      alert("Invalid credentials");
+      alert("Enter credentials");
     }
   };
 
@@ -69,9 +77,47 @@ export default function Login() {
           "
         >
 
-          🔐 Manufacturer Login
+          🔐 Supply Chain Login
 
         </h2>
+
+        {/* ROLE */}
+        <select
+          value={role}
+          onChange={(e) =>
+            setRole(e.target.value)
+          }
+          className="
+            w-full
+            mb-5
+            px-5
+            py-4
+            rounded-xl
+            bg-slate-800
+            border
+            border-white/10
+            outline-none
+            focus:border-cyan-400
+          "
+        >
+
+          <option value="manufacturer">
+            Manufacturer
+          </option>
+
+          <option value="distributor">
+            Distributor
+          </option>
+
+          <option value="wholesaler">
+            Wholesaler
+          </option>
+
+          <option value="pharmacy">
+            Pharmacy
+          </option>
+
+        </select>
 
         {/* EMAIL */}
         <input

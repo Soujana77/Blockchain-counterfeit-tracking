@@ -402,6 +402,7 @@ manufacturingDate: details?.manufacturingDate,
 expiryDate: details?.expiryDate,
 dosage: details?.dosage,
 description: details?.description,
+sold: details?.sold || false,
         scanCount,
         suspicious,
         warnings
@@ -512,6 +513,44 @@ app.post("/api/transferOwnership", async (req, res) => {
         error?.cause?.errorArgs?.message ||
         error.message ||
         "Ownership transfer failed"
+    });
+  }
+});
+
+// ==============================
+// 💊 MARK MEDICINE AS SOLD
+// ==============================
+app.post("/api/markSold", async (req, res) => {
+
+  try {
+
+    const { medicineId } = req.body;
+
+    const medicine =
+      await MedicineDetails.findOne({
+        medicineId
+      });
+
+    if (!medicine) {
+
+      return res.status(404).json({
+        error: "Medicine not found"
+      });
+    }
+
+    medicine.sold = true;
+
+    await medicine.save();
+
+    res.json({
+      message:
+        "Medicine marked as sold successfully ✅"
+    });
+
+  } catch (error) {
+
+    res.status(500).json({
+      error: error.message
     });
   }
 });
