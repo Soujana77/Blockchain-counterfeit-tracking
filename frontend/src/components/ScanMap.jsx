@@ -8,7 +8,7 @@ import {
 export default function ScanMap({ logs }) {
 
   // ✅ Filter valid coordinates only
-  const validLogs = logs.filter(
+  const validLogs = (logs || []).filter(
 
     (log) =>
 

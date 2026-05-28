@@ -245,6 +245,7 @@ export default function Verify() {
                 </h3>
 
               </div>
+              
 
               <div className="bg-slate-900/40 p-5 rounded-2xl">
 

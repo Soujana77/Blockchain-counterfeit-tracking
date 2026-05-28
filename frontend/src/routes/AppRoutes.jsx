@@ -15,6 +15,7 @@ import ProtectedRoute from "../components/ProtectedRoute";
 
 // 🧭 Layout
 import AdminLayout from "../layouts/AdminLayout";
+import TransferOwnership from "../pages/TransferOwnership";
 
 export default function AppRoutes() {
 
@@ -48,6 +49,14 @@ export default function AppRoutes() {
           </ProtectedRoute>
         }
       >
+        <Route
+  path="/transfer"
+  element={
+    <ProtectedRoute>
+      <TransferOwnership />
+    </ProtectedRoute>
+  }
+/>
 
         <Route
           path="/dashboard"

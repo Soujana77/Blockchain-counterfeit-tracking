@@ -10,6 +10,7 @@ import {
   Outlet,
   useNavigate
 } from "react-router-dom";
+import { ArrowRightLeft } from "lucide-react";
 
 export default function AdminLayout() {
 
@@ -94,6 +95,7 @@ export default function AdminLayout() {
                 transition
               "
             >
+             
 
               <Pill size={20} />
 
@@ -115,12 +117,20 @@ export default function AdminLayout() {
                 transition
               "
             >
+               
 
               <ShieldCheck size={20} />
 
               Verify Medicine
 
             </Link>
+            <Link
+  to="/transfer"
+  className="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-800"
+>
+  <ArrowRightLeft size={18} />
+  Transfer Ownership
+</Link>
 
           </nav>
 
@@ -144,6 +154,7 @@ export default function AdminLayout() {
             gap-2
           "
         >
+          
 
           <LogOut size={18} />
 

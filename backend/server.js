@@ -32,7 +32,7 @@ mongoose.connect(
 // ==============================
 // 📌 Contract Details
 // ==============================
-const contractAddress = "0x9f83111F05Dd0b05d0c3De0e844A939499C8AE00";
+const contractAddress = "0x3b6E50DbAD329E4744e375569bC69865083a6f64";
 
 const abi = 
   [
@@ -170,7 +170,6 @@ const abi =
     "type": "function"
   }
 ]
-
   
 // ==============================
 // 📜 Scan Log Schema
@@ -234,7 +233,16 @@ app.post("/api/addMedicine", async (req, res) => {
 
   try {
 
-    const { id, name, manufacturer } = req.body;
+    const {
+  id,
+  name,
+  manufacturer,
+  batchNumber,
+  manufacturingDate,
+  expiryDate,
+  dosage,
+  description
+} = req.body;
 
     await contract.methods
       .addMedicine(id, name, manufacturer)
@@ -243,9 +251,7 @@ app.post("/api/addMedicine", async (req, res) => {
         gas: 3000000
       });
 
-    res.json({
-      message: "Medicine added successfully ✅"
-    });
+    
 
     // 📝 Store extra medicine details
 await MedicineDetails.create({
@@ -263,6 +269,11 @@ await MedicineDetails.create({
   dosage,
 
   description
+});
+
+// ✅ Send response LAST
+res.json({
+  message: "Medicine added successfully ✅"
 });
 
   } catch (error) {
@@ -371,6 +382,10 @@ let warnings = [];
   "⚠ Excessive Scan Activity Detected"
 );
     }
+    // 📦 Get medicine details
+const details = await MedicineDetails.findOne({
+  medicineId
+});
 
     // ✅ Send response
     res.json({
@@ -393,10 +408,7 @@ description: details?.description,
         warnings
       }
     });
-    // 📦 Get medicine details
-const details = await MedicineDetails.findOne({
-  medicineId
-});
+   
 
   } catch (error) {
 
