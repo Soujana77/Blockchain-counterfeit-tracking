@@ -28,6 +28,40 @@ export default function Verify() {
   const [history, setHistory] = useState([]);
 
   const [showScanner, setShowScanner] = useState(false);
+const role = localStorage.getItem("userRole");
+const [markingSold, setMarkingSold] = useState(false);
+const handleMarkSold = async () => {
+
+  try {
+
+    setMarkingSold(true);
+
+    const response = await axios.post(
+      "http://localhost:8000/api/markSold",
+      {
+        medicineId: result.batchId
+      }
+    );
+
+    alert(response.data.message);
+
+    setResult({
+      ...result,
+      sold: true
+    });
+
+  } catch (error) {
+
+    alert(
+      error.response?.data?.error ||
+      "Failed to mark medicine as sold"
+    );
+
+  } finally {
+
+    setMarkingSold(false);
+  }
+};
 // 📄 DOWNLOAD REPORT
 const downloadReport = () => {
 
@@ -505,6 +539,27 @@ const downloadReport = () => {
                 Authentic Medicine Verified
 
               </h2>
+              {result.sold && (
+
+  <div
+    className="
+      mt-4
+      px-4
+      py-2
+      rounded-xl
+      bg-green-500/20
+      border
+      border-green-400/30
+      text-green-300
+      font-semibold
+    "
+  >
+
+    ✅ SOLD TO CUSTOMER
+
+  </div>
+
+)}
 <button
   onClick={downloadReport}
   className="
@@ -523,6 +578,34 @@ const downloadReport = () => {
   Download Verification Report
 
 </button>
+{role === "pharmacy" && !result.sold && (
+
+  <button
+    onClick={handleMarkSold}
+    disabled={markingSold}
+    className="
+      ml-4
+      mt-5
+      px-5
+      py-3
+      bg-green-600
+      hover:bg-green-500
+      rounded-xl
+      text-white
+      font-semibold
+      transition
+    "
+  >
+
+    {
+      markingSold
+        ? "Processing..."
+        : "Mark As Sold"
+    }
+
+  </button>
+
+)}
             </div>
 
             {/* DETAILS GRID */}

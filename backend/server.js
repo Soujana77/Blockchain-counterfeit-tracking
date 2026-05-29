@@ -492,6 +492,31 @@ app.post("/api/transferOwnership", async (req, res) => {
       });
     }
 
+    const medicineDetails =
+  await MedicineDetails.findOne({
+    medicineId: id
+  });
+
+if (medicineDetails?.sold) {
+
+  return res.status(400).json({
+    error:
+      "Medicine already sold. Transfer not allowed."
+  });
+}
+
+const medicineInfo =
+  await MedicineDetails.findOne({
+    medicineId: id
+  });
+
+if (medicineInfo?.sold) {
+
+  return res.status(400).json({
+    error:
+      "Medicine already sold. Transfer not allowed."
+  });
+}
     // ✅ Execute ownership transfer
     await contract.methods
       .transferOwnership(id, newOwner)
