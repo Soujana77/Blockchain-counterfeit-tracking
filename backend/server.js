@@ -614,11 +614,15 @@ app.get("/api/analytics", async (req, res) => {
 
     // Suspicious products count
     const suspiciousCount = counterfeitAlerts.length;
-
+    const soldMedicines =
+  await MedicineDetails.countDocuments({
+    sold: true
+  });
     res.json({
       totalMedicines,
       totalScans,
       suspiciousCount,
+      soldMedicines,
       recentScans,
       counterfeitAlerts
     });

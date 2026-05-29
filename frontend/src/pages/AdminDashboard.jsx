@@ -15,12 +15,13 @@ import {
 
 export default function AdminDashboard() {
   const [analytics, setAnalytics] = useState({
-    totalMedicines: 0,
-    totalScans: 0,
-    suspiciousCount: 0,
-    recentScans: [],
-    counterfeitAlerts: []
-  });
+  totalMedicines: 0,
+  totalScans: 0,
+  suspiciousCount: 0,
+  soldMedicines: 0,
+  recentScans: [],
+  counterfeitAlerts: []
+});
   const [loading, setLoading] = useState(true);
 
   const fetchAnalytics = useCallback(async () => {
@@ -191,7 +192,7 @@ const liveAlerts = [
 
 </div>
       {/* Quick Analytics Cards */}
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+      <div className="max-w-7xl mx-auto grid grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
         {/* Total Medicines */}
         <div className="bg-slate-900/60 border border-cyan-400/20 rounded-2xl p-6 hover:border-cyan-400/40 transition-all">
           <div className="flex items-center justify-between mb-4">
@@ -221,7 +222,37 @@ const liveAlerts = [
           <p className="text-5xl font-bold text-red-400">{analytics.suspiciousCount}</p>
           <p className="text-slate-400 text-sm mt-2">Potential counterfeits detected</p>
         </div>
+{/* Sold Medicines */}
+<div className="bg-slate-900/60 border border-green-400/20 rounded-2xl p-6 hover:border-green-400/40 transition-all">
+
+  <div className="flex items-center justify-between mb-4">
+
+    <h3 className="text-slate-300 font-medium">
+      Sold Medicines
+    </h3>
+
+    <span className="text-4xl">
+      🛒
+    </span>
+
+  </div>
+
+  <p className="text-5xl font-bold text-green-400">
+
+    {analytics.soldMedicines}
+
+  </p>
+
+  <p className="text-slate-400 text-sm mt-2">
+
+    Successfully sold to customers
+
+  </p>
+
+</div>
+
       </div>
+
 
       {/* Main Content Grid */}
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8">
