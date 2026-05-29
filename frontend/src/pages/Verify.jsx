@@ -728,7 +728,17 @@ const downloadReport = () => {
 
                       <p className="text-slate-400 text-sm mb-2">
 
-                        Owner #{index + 1}
+                       {
+  index === 0
+    ? "Manufacturer"
+    : index === 1
+    ? "Distributor"
+    : index === 2
+    ? "Wholesaler"
+    : index === 3
+    ? "Pharmacy"
+    : `Owner #${index + 1}`
+}
 
                       </p>
 
@@ -752,7 +762,109 @@ const downloadReport = () => {
                 )}
 
               </div>
+{/* SUPPLY CHAIN TIMELINE */}
 
+<div
+  className="
+    mt-10
+    bg-slate-900/40
+    rounded-2xl
+    p-6
+  "
+>
+
+  <div className="flex items-center gap-3 mb-8">
+
+    <ShieldCheck
+      size={30}
+      className="text-cyan-400"
+    />
+
+    <h2 className="text-2xl font-bold">
+
+      Supply Chain Timeline
+
+    </h2>
+
+  </div>
+
+  <div className="space-y-4">
+
+    <div className="bg-cyan-500/10 border border-cyan-400/20 rounded-xl p-4">
+
+      <h3 className="font-semibold text-cyan-300">
+
+        Manufacturer
+
+      </h3>
+
+      <p>
+
+        {result.manufacturer}
+
+      </p>
+
+    </div>
+
+    {history.length > 1 && (
+
+      <div className="bg-slate-800 rounded-xl p-4">
+
+        Distributor
+
+      </div>
+
+    )}
+
+    {history.length > 2 && (
+
+      <div className="bg-slate-800 rounded-xl p-4">
+
+        Wholesaler
+
+      </div>
+
+    )}
+
+    {history.length > 3 && (
+
+      <div className="bg-slate-800 rounded-xl p-4">
+
+        Pharmacy
+
+      </div>
+
+    )}
+
+    {result.sold ? (
+
+      <div className="bg-green-500/10 border border-green-400/20 rounded-xl p-4">
+
+        <h3 className="font-semibold text-green-300">
+
+          Sold To Customer ✅
+
+        </h3>
+
+      </div>
+
+    ) : (
+
+      <div className="bg-blue-500/10 border border-blue-400/20 rounded-xl p-4">
+
+        <h3 className="font-semibold text-blue-300">
+
+          Available In Supply Chain
+
+        </h3>
+
+      </div>
+
+    )}
+
+  </div>
+
+</div>
             </div>
 
             {/* WARNING */}
