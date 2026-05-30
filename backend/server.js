@@ -32,7 +32,7 @@ mongoose.connect(
 // ==============================
 // 📌 Contract Details
 // ==============================
-const contractAddress = "0x00A210C0b23FdCb251Ce50d4C783d1Aaa14204b1";
+const contractAddress = "0x411947806fAf33685dfF85Efd02F17583B612Fc2";
 
 const abi = 
   [
@@ -373,7 +373,7 @@ let warnings = [];
     });
 
     // 🚨 Excessive scans
-    if (scanCount > 5) {
+    if (scanCount > 10) {
 
       suspicious = true;
 
@@ -481,9 +481,9 @@ app.post("/api/transferOwnership", async (req, res) => {
     }
 
     // ✅ Check medicine exists first
-    const medicine = await contract.methods
-      .verifyMedicine(id)
-      .call();
+    const result = await contract.methods
+  .verifyMedicine(id)
+  .call();
 
     if (!medicine) {
 
@@ -491,7 +491,18 @@ app.post("/api/transferOwnership", async (req, res) => {
         error: "Medicine not found"
       });
     }
+const currentOwner = result[3];
 
+if (
+  currentOwner.toLowerCase() ===
+  newOwner.toLowerCase()
+) {
+
+  return res.status(400).json({
+    error:
+      "Cannot transfer to the current owner"
+  });
+}
     const medicineDetails =
   await MedicineDetails.findOne({
     medicineId: id
@@ -505,18 +516,6 @@ if (medicineDetails?.sold) {
   });
 }
 
-const medicineInfo =
-  await MedicineDetails.findOne({
-    medicineId: id
-  });
-
-if (medicineInfo?.sold) {
-
-  return res.status(400).json({
-    error:
-      "Medicine already sold. Transfer not allowed."
-  });
-}
     // ✅ Execute ownership transfer
     await contract.methods
       .transferOwnership(id, newOwner)

@@ -78,7 +78,7 @@ export default function LandingPage() {
               "
             >
 
-              Manufacturer Portal
+              Supply Chain Portal
 
             </Link>
 
